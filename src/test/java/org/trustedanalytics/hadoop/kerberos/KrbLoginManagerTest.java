@@ -16,7 +16,6 @@
 package org.trustedanalytics.hadoop.kerberos;
 
 import com.google.common.base.Preconditions;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.minikdc.MiniKdc;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -25,10 +24,9 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.security.auth.Subject;
 import java.io.File;
 import java.util.Properties;
-
-import javax.security.auth.Subject;
 
 public class KrbLoginManagerTest {
 

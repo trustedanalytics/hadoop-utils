@@ -17,10 +17,9 @@ package org.trustedanalytics.hadoop.kerberos;
 
 import org.apache.hadoop.conf.Configuration;
 
-import java.io.IOException;
-
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
 
 public interface KrbLoginManager {
 

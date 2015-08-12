@@ -16,7 +16,6 @@
 package org.trustedanalytics.hadoop.config;
 
 import com.google.common.base.Preconditions;
-
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;

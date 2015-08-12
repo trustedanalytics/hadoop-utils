@@ -15,20 +15,14 @@
  */
 package org.trustedanalytics.hadoop;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.apache.hadoop.conf.Configuration;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trustedanalytics.hadoop.config.ConfigConstants;
+
+import java.io.IOException;
+import java.util.*;
 
 public final class HadoopConfigurationHelper {
 

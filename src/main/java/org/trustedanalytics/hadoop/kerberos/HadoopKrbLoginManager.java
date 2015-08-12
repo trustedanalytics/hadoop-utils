@@ -15,9 +15,11 @@
  */
 package org.trustedanalytics.hadoop.kerberos;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import org.apache.hadoop.security.UserGroupInformation;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.jaas.memory.InMemoryConfiguration;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
@@ -29,17 +31,17 @@ import javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
-
-import org.apache.hadoop.security.UserGroupInformation;
-import org.springframework.security.authentication.jaas.memory.InMemoryConfiguration;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Utils for Kerberos authentication using credentials or keytab method.
  */
 final class HadoopKrbLoginManager implements KrbLoginManager {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory
+            .getLogger(HadoopKrbLoginManager.class);
 
   static final String KRB5_KDC = "java.security.krb5.kdc";
 
@@ -122,7 +124,7 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
 
   private static Map<String, String> getDefaultOptionsForPrincipal(String principal) {
     Map<String, String> options = new HashMap<>();
-
+    LOGGER.debug("Using principal name : " + principal);
     options.put("principal", principal);
     options.put("storeKey", "true");
     options.put("doNotPrompt", "false");

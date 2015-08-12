@@ -18,19 +18,14 @@ package org.trustedanalytics.hadoop.kerberos;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.anyObject;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class HadoopKrbLoginManagerTest {
 

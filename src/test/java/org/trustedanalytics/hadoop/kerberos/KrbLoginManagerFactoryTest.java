@@ -16,7 +16,8 @@
 package org.trustedanalytics.hadoop.kerberos;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertNotNull;
 
 public class KrbLoginManagerFactoryTest {
 
