@@ -1,0 +1,19 @@
+{
+  "VCAP_SERVICES":{
+    "hdfs": [{
+      "credentials": {
+        "HADOOP_CONFIG_KEY":{
+          "hadoop.security.authentication":"Kerberos",
+          "dfs.namenode.kerberos.principal":"hdfs/_HOST@US-WEST-2.COMPUTE.INTERNAL"
+        }
+      }
+    }],
+    "yarn": [{
+      "credentials": {
+        "HADOOP_CONFIG_KEY":{
+          "yarn.resourcemanager.hostname": "0.0.0.0"
+        }
+      }
+    }]
+  }
+}

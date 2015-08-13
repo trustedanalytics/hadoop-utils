@@ -1,0 +1,20 @@
+{
+  "VCAP_SERVICES": {
+    "hdfs": [
+      {
+        "configuration": {
+          "param1": "value_param1",
+          "param2": "value_param2"
+        }
+      },
+      {}
+    ],
+    "yarn": [
+      {
+        "configuration": {
+          "param3": "value_param3"
+        }
+      }
+    ]
+  }
+}
