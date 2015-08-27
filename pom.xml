@@ -8,7 +8,7 @@
     </parent>
     <artifactId>hadoop-utils</artifactId>
 
-    <version>0.4.3-SNAPSHOT</version>
+    <version>0.4.3</version>
     <build>
         <plugins>
             <plugin>
@@ -120,4 +120,8 @@
         <!--/minikdc requirements -->
     </dependencies>
 
+
+  <scm>
+    <tag>org.trustedanalytics.hadoop-utils-0.4.3</tag>
+  </scm>
 </project>
