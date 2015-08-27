@@ -4,13 +4,10 @@
     <parent>
         <groupId>org.trustedanalytics</groupId>
         <artifactId>project-template</artifactId>
-        <version>0.4.2</version>
+        <version>0.4.3</version>
     </parent>
     <artifactId>hadoop-utils</artifactId>
-    <scm>
-        <connection>scm:git:git@hadoop-utils:trustedanalytics/hadoop-utils.git</connection>
-      <tag>HEAD</tag>
-  </scm>
+
     <version>0.4.3-SNAPSHOT</version>
     <build>
         <plugins>
