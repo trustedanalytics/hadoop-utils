@@ -18,6 +18,16 @@
       "credentials": {
         "zk.cluster": "0.0.0.0,1.1.1.1"
       }
+    }],
+    "user-provided": [{
+      "credentials": {
+        "kdc": "ip-10-10-9-198.us-west-2.compute.internal",
+        "krealm": "US-WEST-2.COMPUTE.INTERNAL"
+      },
+      "label": "user-provided",
+      "name": "kerb-test-instance",
+      "syslog_drain_url": "",
+      "tags": []
     }]
 }
 

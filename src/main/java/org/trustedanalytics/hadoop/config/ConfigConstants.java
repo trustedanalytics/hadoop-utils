@@ -35,7 +35,9 @@ public final class ConfigConstants {
 
   public static final String HDFS_URI = "uri";
 
-  public static final String ZOOKEEPER_ClUSTER = "zk.cluster";
+  public static final String ZOOKEEPER_CLUSTER = "zk.cluster";
+
+  public static final String ZOOKEEPER_ZNODE = "zk.node";
 
   public static final String HDFS_SERVICE_TYPE_NAME = "hdfs";
 
@@ -45,8 +47,12 @@ public final class ConfigConstants {
 
   public static final String CREDENTIALS = "credentials";
 
-  private ConfigConstants() {
-    
-  }
+  public static final String USER_PROVIDED = "user-provided";
+
+  public static final String USER_PROP_NAME = "kuser";
+
+  public static final String PASSWORD_PROP_NAME = "kpassword";
+
+  private ConfigConstants() { }
 
 }

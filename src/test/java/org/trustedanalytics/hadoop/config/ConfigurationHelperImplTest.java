@@ -146,7 +146,7 @@ public class ConfigurationHelperImplTest {
 
   @Test
   public void testGetPropertyValue_correctJsonKDCProperty_returnKDCValue() throws Exception {
-    String jsonConf = IOUtils.toString(getClass().getResourceAsStream(CF_ENV_FILE_PATH));
+    String jsonConf = IOUtils.toString(getClass().getResourceAsStream(ENV_VCAP_SERVICES_FILE_PATH));
     ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
     Optional<String> uri = helper.getPropertyFromJson(jsonConf, PropertyLocator.KRB_KDC);
 
@@ -157,7 +157,7 @@ public class ConfigurationHelperImplTest {
 
   @Test
   public void testGetPropertyValue_correctJsonREALMProperty_returnREALMValue() throws Exception {
-    String jsonConf = IOUtils.toString(getClass().getResourceAsStream(CF_ENV_FILE_PATH));
+    String jsonConf = IOUtils.toString(getClass().getResourceAsStream(ENV_VCAP_SERVICES_FILE_PATH));
     ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
     Optional<String> uri = helper.getPropertyFromJson(jsonConf, PropertyLocator.KRB_REALM);
 
@@ -176,6 +176,5 @@ public class ConfigurationHelperImplTest {
             "0.0.0.0,1.1.1.1";
     assertThat(uri.get(), equalTo(expected));
   }
-
 
 }

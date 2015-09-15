@@ -72,10 +72,12 @@ public final class ConfigurationHelperImpl implements ConfigurationHelper {
   @Override
   public Optional<String> getPropertyFromJson(String jsonConf, PropertyLocator location)
       throws IOException {
-    List<ConfigNode> found = pickConfNodes(jsonConf, location);
     String  value = null;
-    for(ConfigNode node: found) {
-      value = node.value();
+    if(jsonConf != null) {
+      List<ConfigNode> found = pickConfNodes(jsonConf, location);
+      for (ConfigNode node : found) {
+        value = node.value();
+      }
     }
     return Optional.ofNullable(value);
   }

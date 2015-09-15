@@ -22,30 +22,57 @@ public enum PropertyLocator implements Track {
   HDFS_URI(ConfigPath.createPath().add(configNode ->
                                            Lists.newArrayList(
                                                configNode
-                                                   .find(ConfigConstants.HDFS_SERVICE_TYPE_NAME)
-                                                   .find(ConfigConstants.HDFS_URI)))
+                                                    .find(ConfigConstants.HDFS_SERVICE_TYPE_NAME)
+                                                    .find(ConfigConstants.HDFS_URI)))
   ),
 
   KRB_KDC(ConfigPath.createPath().add(configNode ->
-                                          Lists.newArrayList(
-                                              configNode
-                                                  .find(ConfigConstants.KRB_CONF_NODE_NAME)
-                                                  .get(ConfigConstants.KDC_ADRESS_PROP_NAME)))
+                                            Lists.newArrayList(
+                                                configNode
+                                                    .get(ConfigConstants.USER_PROVIDED)
+                                                    .find(ConfigConstants.CREDENTIALS)
+                                                    .get(ConfigConstants.KDC_ADRESS_PROP_NAME)))
   ),
 
   KRB_REALM(ConfigPath.createPath().add(configNode ->
                                             Lists.newArrayList(
                                                 configNode
-                                                    .find(ConfigConstants.KRB_CONF_NODE_NAME)
+                                                    .get(ConfigConstants.USER_PROVIDED)
+                                                    .find(ConfigConstants.CREDENTIALS)
                                                     .get(ConfigConstants.REALM_NAME_PROP_NAME)))
   ),
+
 
   ZOOKEPER_URI(ConfigPath.createPath().add(configNode ->
                                             Lists.newArrayList(
                                                 configNode
-                                                        .get(ConfigConstants.ZOOKEEPER_SERVICE_TYPE_NAME)
-                                                        .find(ConfigConstants.CREDENTIALS)
-                                                        .get(ConfigConstants.ZOOKEEPER_ClUSTER)))
+                                                    .get(ConfigConstants.ZOOKEEPER_SERVICE_TYPE_NAME)
+                                                    .find(ConfigConstants.CREDENTIALS)
+                                                    .get(ConfigConstants.ZOOKEEPER_CLUSTER)))
+  ),
+
+ ZOOKEPER_ZNODE(ConfigPath.createPath().add(configNode ->
+                                            Lists.newArrayList(
+                                                configNode
+                                                    .get(ConfigConstants.ZOOKEEPER_SERVICE_TYPE_NAME)
+                                                    .find(ConfigConstants.CREDENTIALS)
+                                                    .get(ConfigConstants.ZOOKEEPER_ZNODE)))
+  ),
+
+ USER(ConfigPath.createPath().add(configNode ->
+                                            Lists.newArrayList(
+                                                configNode
+                                                    .get(ConfigConstants.USER_PROVIDED)
+                                                    .find(ConfigConstants.CREDENTIALS)
+                                                    .get(ConfigConstants.USER_PROP_NAME)))
+  ),
+
+  PASSWORD(ConfigPath.createPath().add(configNode ->
+                                            Lists.newArrayList(
+                                                configNode
+                                                    .get(ConfigConstants.USER_PROVIDED)
+                                                    .find(ConfigConstants.CREDENTIALS)
+                                                    .get(ConfigConstants.PASSWORD_PROP_NAME)))
   );
 
   private ConfigPath configPath;
