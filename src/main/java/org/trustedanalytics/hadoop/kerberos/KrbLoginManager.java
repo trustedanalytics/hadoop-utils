@@ -17,6 +17,8 @@ package org.trustedanalytics.hadoop.kerberos;
 
 import org.apache.hadoop.conf.Configuration;
 
+import sun.security.krb5.KrbException;
+
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
@@ -25,7 +27,7 @@ public interface KrbLoginManager {
 
   public Subject loginWithCredentials(String user, char[] password) throws LoginException;
 
-  public Subject loginWithKeyTab(String user, String path) throws LoginException;
+  public Subject loginWithKeyTab(String user, String path) throws LoginException, KrbException;
 
   public void loginInHadoop(Subject subject, Configuration hadoopConf) throws IOException;
 

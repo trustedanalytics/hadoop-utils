@@ -17,23 +17,35 @@ package org.trustedanalytics.hadoop.kerberos;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+
+import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.jaas.memory.InMemoryConfiguration;
+
+import sun.security.krb5.KrbAsReqBuilder;
+import sun.security.krb5.KrbException;
+import sun.security.krb5.PrincipalName;
+import sun.security.krb5.internal.KDCOptions;
+import sun.security.krb5.internal.ccache.Credentials;
+import sun.security.krb5.internal.ccache.CredentialsCache;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.security.auth.kerberos.KeyTab;
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Utils for Kerberos authentication using credentials or keytab method.
@@ -47,11 +59,17 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
 
   static final String KRB5_REALM = "java.security.krb5.realm";
 
+  static final String KRB5_KINIT_CMD_PROP_NAME = "hadoop.kerberos.kinit.command";
+
+  static final String KRB5_USE_SUBJECT_CREDS_LIMITATION = "javax.security.auth.useSubjectCredsOnly";
+
   static final String KRB5_CONF = "java.security.krb5.conf";
 
-  private static final String KERB_CACHE_NAME = "KRB5CCNAME";
+  static final String KRB5_TGT_PRINCIPAL_NAME = "krbtgt";
 
   private static final String KERB_MODULE = "com.sun.security.auth.module.Krb5LoginModule";
+
+  private static final String KRB5_CREDENTIALS_CACHE_DIR = "/tmp/";
 
   private FactoryHelper helper;
 
@@ -76,28 +94,36 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
   public Subject loginWithCredentials(String user, char[] password) throws LoginException {
     setKerbConfigFromOpts(getDefaultOptionsForPrincipal(user));
     LoginContext lc = helper.getLoginContext(KERB_MODULE, new FixedPasswordHandler(password));
-    return loginWithKerberos(lc);
+    helper.cacheKrbCredentials(user, password);
+    return login(lc);
   }
 
   @Override
   public Subject loginWithKeyTab(String user, String path) throws LoginException {
     setKerbConfigFromOpts(getKeyTabOptionsForPrincipal(user, path));
-    return loginWithKerberos(helper.getLoginContext(KERB_MODULE));
+    LoginContext lc = helper.getLoginContext(KERB_MODULE);
+    helper.cacheKrbCredentials(user, path);
+    return login(lc);
   }
 
   @Override
   public void loginInHadoop(Subject subject, org.apache.hadoop.conf.Configuration hadoopConf)
       throws IOException {
+    Preconditions.checkNotNull(subject, "Subject can't be null!");
+    Preconditions.checkNotNull(hadoopConf, "Hadoop configuration can't be null!");
+
+    String user = subject.getPrincipals().iterator().next().getName();
+    String ccLocation = KRB5_CREDENTIALS_CACHE_DIR + user;
+    hadoopConf.set(CommonConfigurationKeys.KERBEROS_TICKET_CACHE_PATH, ccLocation);
+    hadoopConf.set(KRB5_KINIT_CMD_PROP_NAME, "kinit -c " + ccLocation);
+    UserGroupInformation.getUGIFromTicketCache(ccLocation, user);
     UserGroupInformation.setConfiguration(hadoopConf);
-    UserGroupInformation.loginUserFromSubject(subject);
   }
 
   private void initKerberos(String kdc, String defaultRealm) {
-    String confFile = System.getProperty(KRB5_CONF);
-    if (confFile == null || confFile.isEmpty()) {
-      System.setProperty(KRB5_KDC, kdc);
-      System.setProperty(KRB5_REALM, defaultRealm);
-    }
+    System.setProperty(KRB5_KDC, kdc);
+    System.setProperty(KRB5_REALM, defaultRealm);
+    System.setProperty(KRB5_USE_SUBJECT_CREDS_LIMITATION, "false");
   }
 
   private static Map<String, String> getKeyTabOptionsForPrincipal(String user, String path) {
@@ -107,7 +133,7 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
     return opts;
   }
 
-  private static Subject loginWithKerberos(LoginContext lc) throws LoginException {
+  private Subject login(LoginContext lc) throws LoginException {
     lc.login();
     return lc.getSubject();
   }
@@ -122,22 +148,20 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
   }
 
 
-  private static Map<String, String> getDefaultOptionsForPrincipal(String principal) {
+  private static Map<String, String> getDefaultOptionsForPrincipal(String user) {
     Map<String, String> options = new HashMap<>();
-    LOGGER.debug("Using principal name : " + principal);
-    options.put("principal", principal);
-    options.put("storeKey", "true");
+    LOGGER.debug("Using principal name : " + user);
+    options.put("principal", user);
+    options.put("storeKey", "false");
     options.put("doNotPrompt", "false");
     options.put("useTicketCache", "true");
     options.put("renewTGT", "true");
     options.put("refreshKrb5Config", "true");
     options.put("isInitiator", "true");
     options.put("clearPass", "false");
-
-    String ticketCache = System.getenv(KERB_CACHE_NAME);
-    if (ticketCache != null) {
-      options.put("ticketCache", ticketCache);
-    }
+    options.put("ticketCache", KRB5_CREDENTIALS_CACHE_DIR + user
+                               + PrincipalName.NAME_REALM_SEPARATOR_STR
+                               + System.getProperty(KRB5_REALM));
     options.put("debug", "true");
     return options;
   }
@@ -172,6 +196,67 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
     LoginContext getLoginContext(String module) throws LoginException {
       return new LoginContext(module);
     }
-  }
 
+    synchronized void cacheKrbCredentials(String user, char[] pass) throws LoginException {
+      try {
+        PrincipalName pName = new PrincipalName(user, PrincipalName.KRB_NT_PRINCIPAL);
+        getTgt(pName, prepareTgtReq(pName, pass));
+      } catch (KrbException | IOException e) {
+        LoginException propagate = new LoginException(e.getMessage());
+        propagate.initCause(e);
+        throw propagate;
+      }
+    }
+
+    synchronized void cacheKrbCredentials(String user, String keyTabPath) throws LoginException {
+      try {
+        PrincipalName pName = new PrincipalName(user, PrincipalName.KRB_NT_PRINCIPAL);
+        getTgt(pName, prepareTgtReq(pName, keyTabPath));
+      } catch (KrbException | IOException e) {
+        LoginException propagate = new LoginException(e.getMessage());
+        propagate.initCause(e);
+        throw propagate;
+      }
+    }
+
+    private KrbAsReqBuilder prepareTgtReq(PrincipalName pName, char[] secret) throws KrbException {
+      return new KrbAsReqBuilder(pName, secret);
+    }
+
+    private KrbAsReqBuilder prepareTgtReq(PrincipalName pName, String keyTabLocation) throws KrbException {
+      KeyTab secret = KeyTab.getInstance(new File(keyTabLocation));
+      return new KrbAsReqBuilder(pName, secret);
+    }
+
+    private void getTgt(PrincipalName pName, KrbAsReqBuilder builder) throws KrbException,
+                                                                             IOException {
+
+      PrincipalName krbTGTpName = new PrincipalName(KRB5_TGT_PRINCIPAL_NAME
+                                                    + PrincipalName.NAME_COMPONENT_SEPARATOR_STR
+                                                    + System.getProperty(KRB5_REALM),
+                                                    PrincipalName.KRB_NT_SRV_INST);
+      String cCacheLocation = "FILE:"
+                              + KRB5_CREDENTIALS_CACHE_DIR
+                              + pName.getName();
+
+      KDCOptions kdcOptions = new KDCOptions();
+      kdcOptions.set(KDCOptions.FORWARDABLE, true);
+      kdcOptions.set(KDCOptions.PROXIABLE, true);
+      kdcOptions.set(KDCOptions.RENEWABLE, true);
+
+      builder.setOptions(kdcOptions);
+      builder.setTarget(krbTGTpName);
+      builder.action();
+
+      Credentials cCreds = builder.getCCreds();
+      builder.destroy();
+      CredentialsCache cc = CredentialsCache.getInstance(pName, cCacheLocation);
+      if (cc == null) {
+        LOGGER.debug("Creating new credentials cache file: " + cCacheLocation);
+        cc = CredentialsCache.create(pName, cCacheLocation);
+      }
+      cc.update(cCreds);
+      cc.save();
+    }
+  }
 }

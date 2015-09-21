@@ -56,10 +56,11 @@ public class HadoopKrbLoginManagerTest {
   public void testLoginWithCredentials_givenLoginAndPass_callingKrbSubject() throws Exception {
     HadoopKrbLoginManager.FactoryHelper helper = mock(HadoopKrbLoginManager.FactoryHelper.class);
     LoginContext lc = mock(LoginContext.class);
+
     when(helper.getLoginContext(anyString(), anyObject())).thenReturn(lc);
 
     HadoopKrbLoginManager toTest = new HadoopKrbLoginManager(kdc, realm, helper);
-    toTest.loginWithCredentials(login, pass);
+    toTest.loginWithCredentials("login", "pass".toCharArray());
 
     verify(lc).login();
     verify(lc).getSubject();
@@ -69,6 +70,7 @@ public class HadoopKrbLoginManagerTest {
   public void testLoginWithKeyTab_givenLoginAndKeyTab_callingKrbSubject() throws Exception {
     HadoopKrbLoginManager.FactoryHelper helper = mock(HadoopKrbLoginManager.FactoryHelper.class);
     LoginContext lc = mock(LoginContext.class);
+
     when(helper.getLoginContext(anyString())).thenReturn(lc);
 
     HadoopKrbLoginManager toTest = new HadoopKrbLoginManager(kdc, realm, helper);

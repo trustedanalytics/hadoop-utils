@@ -19,8 +19,10 @@ import com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.minikdc.MiniKdc;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -40,8 +42,8 @@ public class KrbLoginManagerTest {
 
   private static File keyTabForAnotherJojo;
 
-  @BeforeClass
-  public static void startUp() throws Exception {
+  @Before
+  public void startUp() throws Exception {
     cleanEnv();
     File testDir = createTestDir();
     kdc = new MiniKdc(createMiniKdcConf(), testDir);
@@ -51,8 +53,8 @@ public class KrbLoginManagerTest {
     kdc.createPrincipal(keyTabForAnotherJojo, ANOTHER_PRINCIPAL_NAME);
   }
 
-  @AfterClass
-  public static void tearDown() {
+  @After
+  public void tearDown() {
     Preconditions.checkState(kdc != null);
     kdc.stop();
   }
@@ -60,7 +62,7 @@ public class KrbLoginManagerTest {
   @Test
   public void testLoginWithCredentials_validCredentials_successLogin() throws Exception {
     KrbLoginManager loginManager = new HadoopKrbLoginManager(kdc.getHost() + ":" + kdc.getPort(),
-                                           kdc.getRealm());
+                                                             kdc.getRealm());
 
     Subject subject = loginManager.loginWithCredentials(PRINCIPAL_NAME,
                                                         PRINCIPAL_PASS.toCharArray());
@@ -93,7 +95,9 @@ public class KrbLoginManagerTest {
     Configuration hadoopConf = new Configuration(true);
     loginManager.loginInHadoop(subject, hadoopConf);
 
-    Assert.assertTrue(UserGroupInformation.isLoginKeytabBased());
+    Assert.assertEquals(1, subject.getPrincipals().size());
+    Assert.assertEquals(ANOTHER_PRINCIPAL_NAME + "@" + kdc.getRealm(),
+                        subject.getPrincipals().iterator().next().getName());
   }
 
   private static File createTestDir() {

@@ -43,4 +43,5 @@ public class JsonConfigurationReaderTest {
 
     assertThat(rootNode, notNullValue());
   }
+
 }
