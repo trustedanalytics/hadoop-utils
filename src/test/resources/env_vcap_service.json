@@ -4,7 +4,8 @@
         "HADOOP_CONFIG_KEY":{
           "hadoop.security.authentication":"Kerberos",
           "dfs.namenode.kerberos.principal":"hdfs/_HOST@US-WEST-2.COMPUTE.INTERNAL"
-        }
+        },
+        "uri": "hdfs://nameservice1/cf/intel//instances/1cfe7b45-1e07-4751-a853-78ef47a313cc/"
       }
     }],
     "yarn": [{
@@ -16,13 +17,22 @@
     }],
     "zookeeper": [{
       "credentials": {
-        "zk.cluster": "0.0.0.0,1.1.1.1"
+        "zk.cluster": "0.0.0.0,1.1.1.1",
+        "zk.node": "/platform/e59a67b8-bcad-403e-a2a9-6bde5285f05e"
       }
     }],
-    "user-provided": [{
+    "user-provided": [
+      {
+        "credentials": {
+          "apiEndpoint": "http://api.gotapaas.eu"
+        }
+      },
+      {
       "credentials": {
         "kdc": "ip-10-10-9-198.us-west-2.compute.internal",
-        "krealm": "US-WEST-2.COMPUTE.INTERNAL"
+        "krealm": "US-WEST-2.COMPUTE.INTERNAL",
+        "kuser": "cf",
+        "kpassword": "cf1"
       },
       "label": "user-provided",
       "name": "kerb-test-instance",

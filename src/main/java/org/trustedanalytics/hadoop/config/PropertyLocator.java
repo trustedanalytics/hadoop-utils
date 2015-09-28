@@ -30,16 +30,14 @@ public enum PropertyLocator implements Track {
                                             Lists.newArrayList(
                                                 configNode
                                                     .get(ConfigConstants.USER_PROVIDED)
-                                                    .find(ConfigConstants.CREDENTIALS)
-                                                    .get(ConfigConstants.KDC_ADRESS_PROP_NAME)))
+                                                    .find(ConfigConstants.KDC_ADRESS_PROP_NAME)))
   ),
 
   KRB_REALM(ConfigPath.createPath().add(configNode ->
                                             Lists.newArrayList(
                                                 configNode
                                                     .get(ConfigConstants.USER_PROVIDED)
-                                                    .find(ConfigConstants.CREDENTIALS)
-                                                    .get(ConfigConstants.REALM_NAME_PROP_NAME)))
+                                                    .find(ConfigConstants.REALM_NAME_PROP_NAME)))
   ),
 
 
@@ -63,16 +61,14 @@ public enum PropertyLocator implements Track {
                                             Lists.newArrayList(
                                                 configNode
                                                     .get(ConfigConstants.USER_PROVIDED)
-                                                    .find(ConfigConstants.CREDENTIALS)
-                                                    .get(ConfigConstants.USER_PROP_NAME)))
+                                                    .find(ConfigConstants.USER_PROP_NAME)))
   ),
 
   PASSWORD(ConfigPath.createPath().add(configNode ->
                                             Lists.newArrayList(
                                                 configNode
                                                     .get(ConfigConstants.USER_PROVIDED)
-                                                    .find(ConfigConstants.CREDENTIALS)
-                                                    .get(ConfigConstants.PASSWORD_PROP_NAME)))
+                                                    .find(ConfigConstants.PASSWORD_PROP_NAME)))
   );
 
   private ConfigPath configPath;

@@ -57,13 +57,16 @@ public class JsonConfigNode implements ConfigNode {
 
   @Override
   public ConfigNode find(String name) {
-    JsonNode found = Preconditions.checkNotNull(root.findValue(name));
+    JsonNode found = Preconditions.checkNotNull(root.findValue(name),
+                                                "Can not find config node: " + name);
     return createInstance(name, found);
   }
 
   @Override
   public List<ConfigNode> findAll(String name) {
-    List<JsonNode> parents = Preconditions.checkNotNull(root.findParents(name));
+    List<JsonNode> parents =
+        Preconditions.checkNotNull(root.findParents(name),
+                                   "None of " + name + " nodes found in configuration");
     List<ConfigNode> found = new ArrayList<>();
     parents.forEach(parent -> found.add(JsonConfigNode.createInstance(name, parent.get(name))));
     return found;
@@ -71,7 +74,8 @@ public class JsonConfigNode implements ConfigNode {
 
   @Override
   public ConfigNode get(String name) {
-    JsonNode got = Preconditions.checkNotNull(root.get(name));
+    JsonNode got = Preconditions.checkNotNull(root.get(name),
+                                              "Can not get config node: " + name);
     return createInstance(name, got);
   }
 

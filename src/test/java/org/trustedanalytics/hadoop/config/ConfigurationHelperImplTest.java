@@ -36,12 +36,8 @@ public class ConfigurationHelperImplTest {
   private static String ENV_VCAP_SERVICES_FILE_PATH = "/env_vcap_service.json";
 
   @Test
-  public void testGetInstance() throws Exception {
-
-  }
-
-  @Test
-  public void testGetConfFromJson_correctJsonKrbConfiguration_returnKRBConfParams() throws Exception {
+  public void testGetConfFromJson_correctJsonKrbConfiguration_returnKRBConfParams()
+      throws Exception {
     String jsonConf = IOUtils.toString(getClass().getResourceAsStream(CF_ENV_FILE_PATH));
     ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
     Map<String, String> conf = helper.getConfigurationFromJson(jsonConf, ConfigurationLocator.KRB);
@@ -58,21 +54,23 @@ public class ConfigurationHelperImplTest {
       throws Exception {
     String jsonConf = IOUtils.toString(getClass().getResourceAsStream(CF_VCAP_SERVICES_FILE_PATH));
     ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
-    Map<String, String> configParams = helper.getConfigurationFromJson(jsonConf, ConfigurationLocator.HADOOP);
+    Map<String, String> configParams =
+        helper.getConfigurationFromJson(jsonConf, ConfigurationLocator.HADOOP);
 
     Assert.assertThat(configParams.entrySet(), allOf(hasSize(3)));
     Assert.assertThat(configParams, allOf(hasEntry("yarn.resourcemanager.hostname",
-                    "0.0.0.0"),
-            hasEntry("hadoop.security.authentication", "Kerberos"),
-            hasEntry("dfs.namenode.kerberos.principal",
-                    "hdfs/_HOST@US-WEST-2.COMPUTE.INTERNAL")));
+                                                   "0.0.0.0"),
+                                          hasEntry("hadoop.security.authentication", "Kerberos"),
+                                          hasEntry("dfs.namenode.kerberos.principal",
+                                                   "hdfs/_HOST@US-WEST-2.COMPUTE.INTERNAL")));
   }
 
   @Test
   public void testGetConfFromJson_correctEmptyConfJSON_returnEmptyMap() throws Exception {
     String jsonConf = "{\"VCAP_SERVICES\":{}}";
     ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
-    Map<String, String> actual = helper.getConfigurationFromJson(jsonConf, ConfigurationLocator.HADOOP);
+    Map<String, String> actual = helper.getConfigurationFromJson(jsonConf,
+                                                                 ConfigurationLocator.HADOOP);
 
     Map<String, String> expected = new HashMap<>();
 
@@ -83,7 +81,8 @@ public class ConfigurationHelperImplTest {
   public void testGetConfFromJson_correctJSONNoVcapServicesConf_returnEmptyMap() throws Exception {
     String jsonConf = "{\"VCAP_APPLICATION\":{}}";
     ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
-    Map<String, String> actual = helper.getConfigurationFromJson(jsonConf, ConfigurationLocator.HADOOP);
+    Map<String, String> actual =
+        helper.getConfigurationFromJson(jsonConf, ConfigurationLocator.HADOOP);
 
     Map<String, String> expected = new HashMap<>();
 
@@ -114,12 +113,13 @@ public class ConfigurationHelperImplTest {
       throws Exception {
     String jsonConf = IOUtils.toString(getClass().getResourceAsStream(CF_VCAP_SERVICES_FILE_PATH));
     ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
-    Map<String, String> configParams = helper.getConfigurationFromJson(jsonConf, ConfigurationLocator.HDFS);
+    Map<String, String> configParams = helper.getConfigurationFromJson(jsonConf,
+                                                                       ConfigurationLocator.HDFS);
 
     Assert.assertThat(configParams.entrySet(), allOf(hasSize(2)));
     Assert.assertThat(configParams, allOf(hasEntry("hadoop.security.authentication", "Kerberos"),
-            hasEntry("dfs.namenode.kerberos.principal",
-                    "hdfs/_HOST@US-WEST-2.COMPUTE.INTERNAL")));
+                                          hasEntry("dfs.namenode.kerberos.principal",
+                                                   "hdfs/_HOST@US-WEST-2.COMPUTE.INTERNAL")));
   }
 
   @Test
@@ -127,7 +127,8 @@ public class ConfigurationHelperImplTest {
       throws Exception {
     String jsonConf = IOUtils.toString(getClass().getResourceAsStream(CF_VCAP_SERVICES_FILE_PATH));
     ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
-    Map<String, String> configParams = helper.getConfigurationFromJson(jsonConf, ConfigurationLocator.YARN);
+    Map<String, String> configParams =
+        helper.getConfigurationFromJson(jsonConf, ConfigurationLocator.YARN);
 
     Assert.assertThat(configParams.entrySet(), allOf(hasSize(1)));
     Assert.assertThat(configParams, allOf(hasEntry("yarn.resourcemanager.hostname", "0.0.0.0")));
@@ -135,46 +136,52 @@ public class ConfigurationHelperImplTest {
 
   @Test
   public void testGetPropertyValue_correctJsonURIProperty_returnURIValue() throws Exception {
-    String jsonConf = IOUtils.toString(getClass().getResourceAsStream(CF_ENV_FILE_PATH));
-    ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
-    Optional<String> uri = helper.getPropertyFromJson(jsonConf, PropertyLocator.HDFS_URI);
-
     String expected =
         "hdfs://nameservice1/cf/intel//instances/1cfe7b45-1e07-4751-a853-78ef47a313cc/";
-    assertThat(uri.get(), equalTo(expected));
+    assertThatPropertyIsInExpectedLocation(PropertyLocator.HDFS_URI, expected);
   }
 
   @Test
   public void testGetPropertyValue_correctJsonKDCProperty_returnKDCValue() throws Exception {
-    String jsonConf = IOUtils.toString(getClass().getResourceAsStream(ENV_VCAP_SERVICES_FILE_PATH));
-    ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
-    Optional<String> uri = helper.getPropertyFromJson(jsonConf, PropertyLocator.KRB_KDC);
-
-    String expected =
-        "ip-10-10-9-198.us-west-2.compute.internal";
-    assertThat(uri.get(), equalTo(expected));
+    assertThatPropertyIsInExpectedLocation(PropertyLocator.KRB_KDC,
+                                           "ip-10-10-9-198.us-west-2.compute.internal");
   }
 
   @Test
   public void testGetPropertyValue_correctJsonREALMProperty_returnREALMValue() throws Exception {
-    String jsonConf = IOUtils.toString(getClass().getResourceAsStream(ENV_VCAP_SERVICES_FILE_PATH));
-    ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
-    Optional<String> uri = helper.getPropertyFromJson(jsonConf, PropertyLocator.KRB_REALM);
-
-    String expected =
-        "US-WEST-2.COMPUTE.INTERNAL";
-    assertThat(uri.get(), equalTo(expected));
+    assertThatPropertyIsInExpectedLocation(PropertyLocator.KRB_REALM, "US-WEST-2.COMPUTE.INTERNAL");
   }
 
   @Test
-  public void testGetPropertyValue_correctJsonZookeeperProperty_returnCLUSTERValue() throws Exception {
+  public void testGetPropertyValue_correctJsonUSERProperty_returnUSERValue() throws Exception {
+    assertThatPropertyIsInExpectedLocation(PropertyLocator.USER, "cf");
+  }
+
+  @Test
+  public void testGetPropertyValue_correctJsonPASSWORDProperty_returnPASSWORDValue()
+      throws Exception {
+    assertThatPropertyIsInExpectedLocation(PropertyLocator.PASSWORD, "cf1");
+  }
+
+  @Test
+  public void testGetPropertyValue_correctJsonZookeeperProperty_returnCLUSTERValue()
+      throws Exception {
+    assertThatPropertyIsInExpectedLocation(PropertyLocator.ZOOKEPER_URI, "0.0.0.0,1.1.1.1");
+  }
+
+  @Test
+  public void testGetPropertyValue_correctJsonZookeeperProperty_returnZNODEValue()
+      throws Exception {
+    assertThatPropertyIsInExpectedLocation(PropertyLocator.ZOOKEPER_ZNODE,
+                                           "/platform/e59a67b8-bcad-403e-a2a9-6bde5285f05e");
+  }
+
+  private void assertThatPropertyIsInExpectedLocation(PropertyLocator property,
+                                                      String expectedValue) throws Exception {
     String jsonConf = IOUtils.toString(getClass().getResourceAsStream(ENV_VCAP_SERVICES_FILE_PATH));
     ConfigurationHelper helper = ConfigurationHelperImpl.getInstance();
-    Optional<String> uri = helper.getPropertyFromJson(jsonConf, PropertyLocator.ZOOKEPER_URI);
-
-    String expected =
-            "0.0.0.0,1.1.1.1";
-    assertThat(uri.get(), equalTo(expected));
+    Optional<String> actual = helper.getPropertyFromJson(jsonConf, property);
+    assertThat(actual.get(), equalTo(expectedValue));
   }
 
 }
