@@ -52,8 +52,8 @@ import javax.security.auth.login.LoginException;
  */
 final class HadoopKrbLoginManager implements KrbLoginManager {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory
-            .getLogger(HadoopKrbLoginManager.class);
+  private static final org.slf4j.Logger LOGGER =
+      LoggerFactory.getLogger(HadoopKrbLoginManager.class);
 
   static final String KRB5_KDC = "java.security.krb5.kdc";
 
@@ -91,6 +91,11 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
   }
 
   @Override
+  public Subject loginWithJWTtoken(String jwtToken) throws LoginException {
+    return null;
+  }
+
+  @Override
   public Subject loginWithCredentials(String user, char[] password) throws LoginException {
     setKerbConfigFromOpts(getDefaultOptionsForPrincipal(user));
     LoginContext lc = helper.getLoginContext(KERB_MODULE, new FixedPasswordHandler(password));
@@ -112,12 +117,28 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
     Preconditions.checkNotNull(subject, "Subject can't be null!");
     Preconditions.checkNotNull(hadoopConf, "Hadoop configuration can't be null!");
 
-    String user = subject.getPrincipals().iterator().next().getName();
-    String ccLocation = KRB5_CREDENTIALS_CACHE_DIR + user;
+    String ccLocation = ticketCacheLocation(subject);
     hadoopConf.set(CommonConfigurationKeys.KERBEROS_TICKET_CACHE_PATH, ccLocation);
     hadoopConf.set(KRB5_KINIT_CMD_PROP_NAME, "kinit -c " + ccLocation);
-    UserGroupInformation.getUGIFromTicketCache(ccLocation, user);
+    getUGI(subject);
     UserGroupInformation.setConfiguration(hadoopConf);
+  }
+
+  @Override
+  public UserGroupInformation getUGI(Subject subject) throws IOException {
+    Preconditions.checkNotNull(subject, "Subject can't be null!");
+    return UserGroupInformation.getBestUGI(ticketCacheLocation(subject), getUserName(subject));
+  }
+
+  String getUserName(Subject subject) {
+    Preconditions.checkNotNull(subject, "Subject can't be null!");
+    Preconditions.checkArgument(!subject.getPrincipals().isEmpty(),
+                                "Can't find any principal in given Subject!");
+    return subject.getPrincipals().iterator().next().getName();
+  }
+
+  private String ticketCacheLocation(Subject subject) {
+    return KRB5_CREDENTIALS_CACHE_DIR + getUserName(subject);
   }
 
   private void initKerberos(String kdc, String defaultRealm) {
@@ -146,7 +167,6 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
     // TODO: InMemory... brings spring dependency. Replace with own implementation
     Configuration.setConfiguration(new InMemoryConfiguration(appConfigurationEntry));
   }
-
 
   private static Map<String, String> getDefaultOptionsForPrincipal(String user) {
     Map<String, String> options = new HashMap<>();

@@ -56,7 +56,7 @@ public class KrbLoginManagerFactory {
 
     private void ensureSameInstanceRequested(String kdcParam, String defaultRealmParam) {
         if (!kdcParam.equals(kdc) || !defaultRealmParam.equals(defaultRealm))
-            throw new IllegalArgumentException("Not implemented. This factory can not create new "
+            throw new IllegalArgumentException("Not implemented. This factory can not newInstance new "
                     + "instance of KrbLoginManager. " + "KrbLoginManager(" + kdcParam + ","
                     + defaultRealmParam + ") requested, but " + "KrbLoginManager(" + kdc + ","
                     + defaultRealm + ") was previously created");

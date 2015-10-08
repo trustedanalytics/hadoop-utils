@@ -17,20 +17,24 @@ package org.trustedanalytics.hadoop.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trustedanalytics.hadoop.config.internal.Path;
+import org.trustedanalytics.hadoop.config.internal.ConfigConstants;
+import org.trustedanalytics.hadoop.config.internal.ConfigNode;
+import org.trustedanalytics.hadoop.config.internal.ConfigurationReader;
+import org.trustedanalytics.hadoop.config.internal.JsonConfigurationReader;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 
+@Deprecated
 public final class ConfigurationHelperImpl implements ConfigurationHelper {
 
-  private static final Logger LOGGER = LoggerFactory
-          .getLogger(ConfigurationHelperImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationHelperImpl.class);
 
   private FactoryHelper factoryHelper;
 
-  ConfigurationHelperImpl(
-      FactoryHelper factoryHelper) {
+  ConfigurationHelperImpl(FactoryHelper factoryHelper) {
     this.factoryHelper = factoryHelper;
   }
 
@@ -50,7 +54,7 @@ public final class ConfigurationHelperImpl implements ConfigurationHelper {
     Map<String, String> config = new HashMap<>();
     found.forEach(confSection ->
                       confSection.getChildren().forEach(param ->
-                                                            config.put(param.name(), param.value())
+                                                             config.put(param.name(), param.value())
                       )
     );
 
@@ -99,8 +103,7 @@ public final class ConfigurationHelperImpl implements ConfigurationHelper {
     }
   }
 
-  private List<ConfigNode> pickConfNodes(String jsonConf, Track location)
-      throws IOException {
+  private List<ConfigNode> pickConfNodes(String jsonConf, Path location) throws IOException {
     ConfigurationReader reader = factoryHelper.getConfigurationReader(jsonConf);
     ConfigNode node = reader.getRootNode();
     List<ConfigNode> found = new ArrayList<>();

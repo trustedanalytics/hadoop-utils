@@ -18,6 +18,8 @@ package org.trustedanalytics.hadoop.config;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.trustedanalytics.hadoop.config.internal.ConfigNode;
+import org.trustedanalytics.hadoop.config.internal.JsonConfigurationReader;
 
 import java.util.List;
 
@@ -36,10 +38,21 @@ public class JsonConfigNodeTest {
   }
 
   @Test
-  public void testGetChildren() throws Exception {
-    List<ConfigNode> children =  root.getChildren();
+  public void testGetChildren_arrayOfChildren_returnListConfigNodes() throws Exception {
+    List<ConfigNode> children =  root.find("hdfs").getChildren();
 
-    assertThat(children.size(), equalTo(1));
+    assertThat(children.size(), equalTo(2));
+    assertThat(children.get(0).name(), equalTo("instance1"));
+    assertThat(children.get(1).name(), equalTo("instance2"));
+  }
+
+  @Test
+  public void testGetChildren_returnListConfigNodes() throws Exception {
+    List<ConfigNode> children = root.get("VCAP_SERVICES").getChildren();
+
+    assertThat(children.size(), equalTo(2));
+    assertThat(children.get(0).name(), equalTo("hdfs"));
+    assertThat(children.get(1).name(), equalTo("yarn"));
   }
 
   @Test
@@ -77,14 +90,31 @@ public class JsonConfigNodeTest {
   public void testFindAll_existentNodes_returnListOfConfigNodes() throws Exception {
     List<ConfigNode> nodes = root.findAll("configuration");
 
-    assertThat(nodes.size(), equalTo(2));
+    assertThat(nodes.size(), equalTo(3));
   }
 
-  @Test()
+  @Test
   public void testFindAll_notExistentNodes_returnEmptyList() throws Exception {
     List<ConfigNode> sections = root.findAll("not_existent_node_name");
 
     assertThat(sections, empty());
   }
 
+  @Test
+  public void testSelectOne_ExistentInstance_returnNodeForSelectedInstance() throws Exception {
+    String node = root.get("VCAP_SERVICES").get("hdfs").selectOne("name","instance2")
+        .find("param3").value();
+
+    assertThat(node, equalTo("value_param3"));
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testSelectOne_NotExistentInstance_throwsException() throws Exception {
+    root.get("VCAP_SERVICES").get("hdfs").selectOne("name","not_existent_instance_name");
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testSelectOne_NotTextualNode_throwsException() throws Exception {
+    root.get("VCAP_SERVICES").get("hdfs").selectOne("configuration","some_value");
+  }
 }

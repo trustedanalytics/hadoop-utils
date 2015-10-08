@@ -17,10 +17,16 @@ package org.trustedanalytics.hadoop.kerberos;
 
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.Test;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
+import sun.security.krb5.PrincipalName;
+
+import javax.security.auth.Subject;
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
+
+import java.security.AccessControlContext;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,6 +104,28 @@ public class HadoopKrbLoginManagerTest {
   @Test(expected = IllegalArgumentException.class)
   public void testValidateParams_emptyRealm_throwsException() throws Exception {
     HadoopKrbLoginManager.validateParams(kdc, "");
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testGetUGI_nullSubject_throwsException() throws Exception {
+    HadoopKrbLoginManager.FactoryHelper helper = mock(HadoopKrbLoginManager.FactoryHelper.class);
+    HadoopKrbLoginManager toTest = new HadoopKrbLoginManager(kdc, realm, helper);
+    toTest.getUGI(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testGetUserName_nullSuject_throwsException() throws Exception {
+    HadoopKrbLoginManager.FactoryHelper helper = mock(HadoopKrbLoginManager.FactoryHelper.class);
+    HadoopKrbLoginManager toTest = new HadoopKrbLoginManager(kdc, realm, helper);
+    toTest.getUserName(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetUserName_noPrincipalInSubject_throwsException() throws Exception {
+    HadoopKrbLoginManager.FactoryHelper helper = mock(HadoopKrbLoginManager.FactoryHelper.class);
+    HadoopKrbLoginManager toTest = new HadoopKrbLoginManager(kdc, realm, helper);
+    Subject subject = new Subject();
+    toTest.getUserName(subject);
   }
 
 }

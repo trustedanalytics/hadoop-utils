@@ -2,18 +2,20 @@
     "hdfs": [{
       "credentials": {
         "HADOOP_CONFIG_KEY":{
-          "hadoop.security.authentication":"Kerberos",
+          "hadoop.security.authentication":"kerberos",
           "dfs.namenode.kerberos.principal":"hdfs/_HOST@US-WEST-2.COMPUTE.INTERNAL"
         },
-        "uri": "hdfs://nameservice1/cf/intel//instances/1cfe7b45-1e07-4751-a853-78ef47a313cc/"
-      }
+        "uri": "hdfs://localhost/cf/intel/instances/1cfe7b45-1e07-4751-a853-78ef47a313cc/"
+      },
+      "name": "hdfs-instance"
     }],
     "yarn": [{
       "credentials": {
         "HADOOP_CONFIG_KEY":{
           "yarn.resourcemanager.hostname": "0.0.0.0"
         }
-      }
+      },
+      "name": "yarn-instance"
     }],
     "zookeeper": [{
       "credentials": {
@@ -21,11 +23,32 @@
         "zk.node": "/platform/e59a67b8-bcad-403e-a2a9-6bde5285f05e"
       }
     }],
+    "hbase": [{
+      "credentials": {
+        "HADOOP_CONFIG_KEY":{
+         "hbase.zookeeper.quorum": "cdh-master-0.node.gotapaaseu.consul,cdh-master-1.node.gotapaaseu.consul,cdh-master-2.node.gotapaaseu.consul"
+        },
+        "hbase.namespace": "6f1bb0fdab0502079c4c4ca6bc770574fe546fc1"
+      },
+      "name": "hbase-instance1"
+      },
+      {
+        "credentials": {
+          "HADOOP_CONFIG_KEY":{
+            "hbase.zookeeper.quorum": "cdh-master-0,cdh-master-1,cdh-master-2",
+            "hadoop.security.authentication":"kerberos"
+          },
+          "hbase.namespace": "6f1bb0fdab0502079c4c4ca6bc770574fe546fc1"
+        },
+        "name": "hbase-instance2"
+      }
+    ],
     "user-provided": [
       {
         "credentials": {
           "apiEndpoint": "http://api.gotapaas.eu"
-        }
+        },
+        "name":"sso"
       },
       {
       "credentials": {
@@ -35,7 +58,7 @@
         "kpassword": "cf1"
       },
       "label": "user-provided",
-      "name": "kerb-test-instance",
+      "name": "kerberos-service",
       "syslog_drain_url": "",
       "tags": []
     }]

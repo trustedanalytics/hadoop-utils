@@ -16,6 +16,7 @@
 package org.trustedanalytics.hadoop.kerberos;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.security.UserGroupInformation;
 
 import sun.security.krb5.KrbException;
 
@@ -25,10 +26,14 @@ import java.io.IOException;
 
 public interface KrbLoginManager {
 
-  public Subject loginWithCredentials(String user, char[] password) throws LoginException;
+  Subject loginWithJWTtoken(String jwtToken) throws LoginException;
 
-  public Subject loginWithKeyTab(String user, String path) throws LoginException, KrbException;
+  Subject loginWithCredentials(String user, char[] password) throws LoginException;
 
-  public void loginInHadoop(Subject subject, Configuration hadoopConf) throws IOException;
+  Subject loginWithKeyTab(String user, String path) throws LoginException, KrbException;
+
+  void loginInHadoop(Subject subject, Configuration hadoopConf) throws IOException;
+
+  UserGroupInformation getUGI(Subject subject) throws IOException;
 
 }

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trustedanalytics.hadoop.config;
+package org.trustedanalytics.hadoop.config.internal;
 
-public interface ConfigurationReader {
+import org.trustedanalytics.hadoop.config.internal.ConfigPath;
 
-  ConfigNode getRootNode();
-
+@FunctionalInterface
+public interface Path {
+  ConfigPath getConfPath();
 }

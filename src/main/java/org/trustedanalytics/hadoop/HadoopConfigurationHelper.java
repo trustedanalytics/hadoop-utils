@@ -19,11 +19,12 @@ import org.apache.hadoop.conf.Configuration;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.trustedanalytics.hadoop.config.ConfigConstants;
+import org.trustedanalytics.hadoop.config.internal.ConfigConstants;
 
 import java.io.IOException;
 import java.util.*;
 
+@Deprecated
 public final class HadoopConfigurationHelper {
 
 

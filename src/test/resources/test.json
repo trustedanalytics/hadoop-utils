@@ -5,9 +5,16 @@
         "configuration": {
           "param1": "value_param1",
           "param2": "value_param2"
-        }
+        },
+        "name": "instance1"
       },
-      {}
+      {
+        "configuration": {
+          "param3": "value_param3",
+          "param4": "value_param4"
+        },
+        "name": "instance2"
+      }
     ],
     "yarn": [
       {

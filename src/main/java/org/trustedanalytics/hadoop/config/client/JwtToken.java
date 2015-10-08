@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trustedanalytics.hadoop.config;
+package org.trustedanalytics.hadoop.config.client;
 
-public interface Track {
-  ConfigPath getConfPath();
+/**
+ * Oauth token representation.
+ */
+public interface JwtToken {
+
 }

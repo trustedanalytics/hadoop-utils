@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trustedanalytics.hadoop.config;
+package org.trustedanalytics.hadoop.config.internal;
 
 import com.google.common.base.Preconditions;
 import org.codehaus.jackson.map.ObjectMapper;

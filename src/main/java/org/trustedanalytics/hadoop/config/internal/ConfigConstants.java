@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trustedanalytics.hadoop.config;
+package org.trustedanalytics.hadoop.config.internal;
 
 public final class ConfigConstants {
 
@@ -43,6 +43,10 @@ public final class ConfigConstants {
 
   public static final String YARN_SERVICE_TYPE_NAME = "yarn";
 
+  public static final String HBASE_SERVICE_TYPE_NAME = "hbase";
+
+  public static final String GEAR_PUMP_SERVICE_TYPE_NAME = "gearpump";
+
   public static final String ZOOKEEPER_SERVICE_TYPE_NAME = "zookeeper";
 
   public static final String CREDENTIALS = "credentials";
@@ -52,6 +56,10 @@ public final class ConfigConstants {
   public static final String USER_PROP_NAME = "kuser";
 
   public static final String PASSWORD_PROP_NAME = "kpassword";
+
+  public static final String HBASE_PROP_NAME_NAMESPACE = "hbase.namespace";
+
+  public static final String INSTANCE_NAME_PROP_NAME = "name";
 
   private ConfigConstants() { }
 

@@ -16,6 +16,9 @@
 package org.trustedanalytics.hadoop.config;
 
 import org.junit.Test;
+import org.trustedanalytics.hadoop.config.internal.ConfigNode;
+import org.trustedanalytics.hadoop.config.internal.ConfigurationReader;
+import org.trustedanalytics.hadoop.config.internal.JsonConfigurationReader;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;

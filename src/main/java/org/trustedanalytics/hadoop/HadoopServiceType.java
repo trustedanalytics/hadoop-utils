@@ -15,6 +15,7 @@
  */
 package org.trustedanalytics.hadoop;
 
+@Deprecated
 public enum HadoopServiceType {
 
   HDFS("hdfs"),

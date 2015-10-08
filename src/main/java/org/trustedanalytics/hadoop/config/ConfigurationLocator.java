@@ -15,36 +15,32 @@
  */
 package org.trustedanalytics.hadoop.config;
 
-import com.google.common.collect.Lists;
+import org.trustedanalytics.hadoop.config.internal.Path;
+import org.trustedanalytics.hadoop.config.client.ServiceType;
+import org.trustedanalytics.hadoop.config.internal.ConfigConstants;
+import org.trustedanalytics.hadoop.config.internal.ConfigPath;
 
-public enum ConfigurationLocator implements Track {
+@Deprecated
+public enum ConfigurationLocator implements Path {
 
-  HADOOP(ConfigPath.createPath().add(configNode ->
-                                       configNode.findAll(
-                                           ConfigConstants.HADOOP_CONFIG_KEY_VALUE))
+  HADOOP(ConfigPath.createPath()
+             .add(configNode -> configNode.findAll(ConfigConstants.HADOOP_CONFIG_KEY_VALUE))
   ),
 
-  KRB(ConfigPath.createPath().add(configNode ->
-                                      Lists.newArrayList(
-                                              configNode
-                                                      .find(ConfigConstants.KRB_CONF_NODE_NAME)))
+  YARN(ConfigPath.createPath().append(ServiceType.YARN_TYPE.getConfPath())
+           .add(configNode -> configNode.findAll(ConfigConstants.HADOOP_CONFIG_KEY_VALUE))
+
   ),
 
-  YARN(ConfigPath.createPath().add(configNode ->
-          Lists.newArrayList(
-                  configNode.find(ConfigConstants.YARN_SERVICE_TYPE_NAME)))
-                                       .add(configNode ->
-                                               configNode
-                                                       .findAll(ConfigConstants.HADOOP_CONFIG_KEY_VALUE))
+  HDFS(ConfigPath.createPath().append(ServiceType.HDFS_TYPE.getConfPath())
+           .add(configNode -> configNode.findAll(ConfigConstants.HADOOP_CONFIG_KEY_VALUE))
   ),
 
-  HDFS(ConfigPath.createPath().add(configNode -> Lists.newArrayList(
-                               configNode.find(ConfigConstants.HDFS_SERVICE_TYPE_NAME))).
-                               add(configNode ->
-                                       configNode
-                                               .findAll(ConfigConstants.HADOOP_CONFIG_KEY_VALUE))
+  HBASE(ConfigPath.createPath().append(ServiceType.HBASE_TYPE.getConfPath())
+                .add(configNode -> configNode.findAll(ConfigConstants.HADOOP_CONFIG_KEY_VALUE))
   );
-    
+
+
   private ConfigPath configPath;
 
   ConfigurationLocator(ConfigPath path) {
@@ -53,6 +49,6 @@ public enum ConfigurationLocator implements Track {
 
   @Override
   public ConfigPath getConfPath() {
-    return this.configPath;
+    return ConfigPath.createPath().append(this.configPath);
   }
 }

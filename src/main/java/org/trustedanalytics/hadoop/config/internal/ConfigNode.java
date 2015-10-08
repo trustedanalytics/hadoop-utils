@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trustedanalytics.hadoop.config;
+package org.trustedanalytics.hadoop.config.internal;
 
 import java.util.List;
 
@@ -26,6 +26,8 @@ public interface ConfigNode {
   ConfigNode find(String name);
 
   ConfigNode get(String name);
+
+  ConfigNode selectOne(String name, String value);
 
   String value();
 

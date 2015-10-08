@@ -13,30 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trustedanalytics.hadoop.config;
+package org.trustedanalytics.hadoop.config.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-
-public class ConfigPath {
-
-  List<Function<ConfigNode, List<ConfigNode>>> stack = new ArrayList<>();
-
-  static ConfigPath path;
-
-  static ConfigPath createPath() {
-    path = new ConfigPath();
-    return path;
-  }
-
-  ConfigPath add(Function<ConfigNode, List<ConfigNode>> action) {
-    stack.add(action);
-    return path;
-  }
-
-  List<Function<ConfigNode, List<ConfigNode>>> getStack() {
-    return this.stack;
-  }
-
+@FunctionalInterface
+public interface ConfigurationReader {
+  ConfigNode getRootNode();
 }
