@@ -10,7 +10,7 @@
     </parent>
     <artifactId>hadoop-utils</artifactId>
 
-    <version>0.5.0</version>
+    <version>0.5.1</version>
     <properties>
         <hbaseVersion>1.0.0-cdh5.4.2.1</hbaseVersion>
         <jacoco-measurement-instructions>0.714</jacoco-measurement-instructions>
@@ -131,11 +131,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>3.2.6.RELEASE</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.4.5</version>
@@ -175,6 +170,7 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-release-with-junit-mockito-dependencies</artifactId>
             <version>1.6.2</version>
+            <scope>test</scope>
             <type>zip</type>
         </dependency>
         <!--/minikdc requirements -->

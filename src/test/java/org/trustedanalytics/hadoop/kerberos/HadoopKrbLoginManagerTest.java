@@ -50,9 +50,10 @@ public class HadoopKrbLoginManagerTest {
     HadoopKrbLoginManager toTest = new HadoopKrbLoginManager(kdc, realm);
     Map<String, String> opts = new HashMap<>();
     opts.put("keyTab", pathToKeyTab);
-    toTest.setKerbConfigFromOpts(opts);
+    toTest.setKerbConfigFromOpts(login, opts);
 
-    AppConfigurationEntry[] keyTabEntry = Configuration.getConfiguration().getAppConfigurationEntry("keyTab");
+    AppConfigurationEntry[] keyTabEntry = Configuration.getConfiguration()
+        .getAppConfigurationEntry(login);
     Map<String, ?> keyTab = keyTabEntry[0].getOptions();
 
     assertThat(keyTab, IsMapContaining.hasEntry("keyTab", pathToKeyTab));

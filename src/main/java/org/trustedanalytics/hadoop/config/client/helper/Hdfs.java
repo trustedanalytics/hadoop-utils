@@ -36,37 +36,37 @@ import javax.security.auth.login.LoginException;
  * Usage:
  * 1) Use case with one configured service account.
  *
- * 1.1) How to get hdfs configuration (one hdfs service bound)?
+ * 1.1) How to get hdfs configuration (one hdfs service bound).
  * Configuration hdfsConf = Hdfs.newInstance().createConfig();
  *
- * 1.2) How to get hdfs file system object (one hdfs service bound)?
+ * 1.2) How to get hdfs file system object (one hdfs service bound).
  * FileSystem hdfsFs = Hdfs.newInstance().createFileSystem();
  *
- * 1.3) How to get hdfs configuration for given service instance name?
+ * 1.3) How to get hdfs configuration for given service instance name.
  * Configuration hdfsConf = Hdfs.newInstance("hdfs-instance").createConfig();
  *
- * 1.4) How to get file system object  for given service instance name?
+ * 1.4) How to get file system object for given service instance name.
  * FileSystem hdfsFs = Hdfs.newInstance("hdfs-instance").createFileSystem();
  *
  *
- * 2) Use case with user identity from oauth (not yet implemented).
+ * 2) Use case with user identity from OAuth2 (not yet implemented).
  *
- * 2.1) How to get hdfs configuration (one hdfs service bound)?
+ * 2.1) How to get hdfs configuration (one hdfs service bound).
  * JwtToken jwtToken;
  * ...
  * Configuration hdfsConf = Hdfs.newInstance().createConfig(jwtToken);
  *
- * 2.2) How to get hdfs file system object (one hdfs service bound)?
+ * 2.2) How to get hdfs file system object (one hdfs service bound).
  * JwtToken jwtToken;
  * ...
  * FileSystem hdfsFs = Hdfs.newInstance().createFileSystem(jwtToken);
  *
- * 2.3) How to get hdfs configuration for given service instance name?
+ * 2.3) How to get hdfs configuration for given service instance name.
  * JwtToken jwtToken;
  * ...
  * Configuration hdfsConf = Hdfs.newInstance("hdfs-instance").createConfig(jwtToken);
  *
- * 2.4) How to get file system object for given service instance name?
+ * 2.4) How to get file system object for given service instance name.
  * JwtToken jwtToken;
  * ...
  * FileSystem hdfsFs = Hdfs.newInstance("hdfs-instance").createFileSystem(jwtToken);
@@ -139,7 +139,7 @@ public final class Hdfs {
   /**
    * Create new {@link Configuration} object.
    *
-   * Authentication (if needed) with the use of password from configuration.
+   * Authenticates (if needed) using password from configuration.
    *
    *  @return configuration
    *  @throws LoginException
@@ -152,7 +152,7 @@ public final class Hdfs {
   /**
    * Create new {@link Configuration} object.
    *
-   * Authentication with the use of JwtToken from oauth server.
+   * Authenticates using of JwtToken from oauth server.
    *
    * @param jwtToken authentication token
    * @return configuration
@@ -164,7 +164,7 @@ public final class Hdfs {
   }
 
   /**
-   * Check if authentication method is set on kerberos?
+   * Checks if authentication method type is set to "Kerberos".
    *
    * @param hadoopConf service configuration
    * @return true if kerberos is set

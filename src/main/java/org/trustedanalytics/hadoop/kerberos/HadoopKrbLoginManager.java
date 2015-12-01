@@ -21,7 +21,6 @@ import com.google.common.base.Strings;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.jaas.memory.InMemoryConfiguration;
 
 import sun.security.krb5.KrbAsReqBuilder;
 import sun.security.krb5.KrbException;
@@ -97,16 +96,16 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
 
   @Override
   public Subject loginWithCredentials(String user, char[] password) throws LoginException {
-    setKerbConfigFromOpts(getDefaultOptionsForPrincipal(user));
-    LoginContext lc = helper.getLoginContext(KERB_MODULE, new FixedPasswordHandler(password));
+    setKerbConfigFromOpts(user, getDefaultOptionsForPrincipal(user));
+    LoginContext lc = helper.getLoginContext(user, new FixedPasswordHandler(password));
     helper.cacheKrbCredentials(user, password);
     return login(lc);
   }
 
   @Override
   public Subject loginWithKeyTab(String user, String path) throws LoginException {
-    setKerbConfigFromOpts(getKeyTabOptionsForPrincipal(user, path));
-    LoginContext lc = helper.getLoginContext(KERB_MODULE);
+    setKerbConfigFromOpts(user, getKeyTabOptionsForPrincipal(user, path));
+    LoginContext lc = helper.getLoginContext(user);
     helper.cacheKrbCredentials(user, path);
     return login(lc);
   }
@@ -145,6 +144,7 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
     System.setProperty(KRB5_KDC, kdc);
     System.setProperty(KRB5_REALM, defaultRealm);
     System.setProperty(KRB5_USE_SUBJECT_CREDS_LIMITATION, "false");
+    Configuration.setConfiguration(InMemoryMultiuserJaasConfiguration.getInstance());
   }
 
   private static Map<String, String> getKeyTabOptionsForPrincipal(String user, String path) {
@@ -159,13 +159,13 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
     return lc.getSubject();
   }
 
-  public void setKerbConfigFromOpts(Map<String, String> opts) {
+  public void setKerbConfigFromOpts(String username, Map<String, String> opts) {
     AppConfigurationEntry[] appConfigurationEntry =
         new AppConfigurationEntry[]{new AppConfigurationEntry(KERB_MODULE,
                                                               LoginModuleControlFlag.REQUIRED,
                                                               opts)};
-    // TODO: InMemory... brings spring dependency. Replace with own implementation
-    Configuration.setConfiguration(new InMemoryConfiguration(appConfigurationEntry));
+    InMemoryMultiuserJaasConfiguration conf = (InMemoryMultiuserJaasConfiguration) Configuration.getConfiguration();
+    conf.append(username, appConfigurationEntry);
   }
 
   private static Map<String, String> getDefaultOptionsForPrincipal(String user) {

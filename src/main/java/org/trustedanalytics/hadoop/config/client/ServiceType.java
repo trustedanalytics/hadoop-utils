@@ -22,13 +22,13 @@ import org.trustedanalytics.hadoop.config.internal.ConfigPath;
 import org.trustedanalytics.hadoop.config.internal.Path;
 
 /**
- * Indicates localization of configuration section for particular
+ * Indicates location of configuration section for particular
  * service types.
  */
 public enum ServiceType implements Path {
 
   /**
-   * Localization of all instances HBASE type services.
+   * Location of all instances of HBASE type services.
    */
   HBASE_TYPE(ConfigPath.createPath()
                  .add(configNode -> Lists.newArrayList(
@@ -36,7 +36,7 @@ public enum ServiceType implements Path {
   ),
 
   /**
-   * Localization of all instances YARN type services.
+   * Location of all instances of YARN type services.
    */
   YARN_TYPE(ConfigPath.createPath()
                 .add(configNode -> Lists.newArrayList(
@@ -44,7 +44,7 @@ public enum ServiceType implements Path {
   ),
 
   /**
-   * Localization of all instances HDFS type services.
+   * Location of all instances of HDFS type services.
    */
   HDFS_TYPE(ConfigPath.createPath()
                 .add(configNode -> Lists.newArrayList(
@@ -52,7 +52,7 @@ public enum ServiceType implements Path {
   ),
 
   /**
-   * Localization of all instances ZOOKEEPER type services.
+   * Location of all instances of ZOOKEEPER type services.
    */
   ZOOKEEPER_TYPE(ConfigPath.createPath()
                 .add(configNode -> Lists.newArrayList(
@@ -60,7 +60,7 @@ public enum ServiceType implements Path {
   ),
 
   /**
-   * Localization of all user provided services configuration.
+   * Location of all user provided services configuration.
    */
   USER_PROVIDED(ConfigPath.createPath()
                 .add(configNode -> Lists.newArrayList(
@@ -68,7 +68,7 @@ public enum ServiceType implements Path {
   ),
 
   /**
-   * Localization of all gearpump services configuration.
+   * Location of all gearpump services configuration.
    */
   GEAR_PUMP_TYPE(ConfigPath.createPath()
                      .add(configNode -> Lists.newArrayList(

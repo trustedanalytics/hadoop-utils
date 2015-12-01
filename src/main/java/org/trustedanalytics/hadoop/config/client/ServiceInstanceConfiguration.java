@@ -22,13 +22,13 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Represents configuration of some hadoop service instance.
- * HDFS, YARN, HBASE, GEARPUMP, ZOOKEEPER, ... .
+ * Represents configuration for hadoop service instances
+ * (HDFS, YARN, HBASE, GEARPUMP, ZOOKEEPER, ... ).
  */
 public interface ServiceInstanceConfiguration {
 
   /**
-   * Return service instance name.
+   * Returns that service instance name.
    *
    * @return service instance name
    */
@@ -42,18 +42,18 @@ public interface ServiceInstanceConfiguration {
   Configuration asHadoopConfiguration();
 
   /**
-   * Return collection of all configuration parameters set for service instance.
+   * Returns configuration properties for that service instance.
    *
-   * @return collection of all configuration parameters
+   * @return collection of configuration properties.
    */
   Map<String, String> asMap();
 
   /**
-   * Return single parameter from configuration. Parameter name has to bee unique in whole
-   * configuration otherwise it throws {@link IllegalStateException}.
+   * Returns property from configuration. Property name has to be unique in the whole
+   * configuration otherwise {@link IllegalStateException} will be thrown.
    *
-   * @param propertyLocation parameter localization
-   * @return optional value of parameter
+   * @param propertyLocation property location
+   * @return optional property value
    * @throws IllegalStateException
    */
   Optional<String> getProperty(Property propertyLocation) throws IllegalStateException;

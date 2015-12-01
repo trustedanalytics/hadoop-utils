@@ -62,6 +62,7 @@ public final class Yarn {
     return new Yarn(builder.build());
   }
 
+
   private Yarn(HadoopClient defaultClient) throws IOException {
     this.hadoopClient = defaultClient;
   }
@@ -69,7 +70,7 @@ public final class Yarn {
   /**
    * Create new {@link Configuration} object.
    *
-   * Authentication (if needed) with the use of password from configuration.
+   * Authenticates (if needed) using password from configuration.
    *
    *  @return configuration
    *  @throws LoginException
@@ -82,7 +83,7 @@ public final class Yarn {
   /**
    * Create new {@link Configuration} object.
    *
-   * Authentication with the use of JwtToken from oauth server.
+   * Authenticates using JwtToken.
    *
    * @param jwtToken authentication token
    * @return configuration
@@ -94,7 +95,7 @@ public final class Yarn {
   }
 
   /**
-   * Check if authentication method is set on kerberos?
+   * Checks if authentication method type is set to "Kerberos".
    *
    * @param hadoopConf service configuration
    * @return true if kerberos is set

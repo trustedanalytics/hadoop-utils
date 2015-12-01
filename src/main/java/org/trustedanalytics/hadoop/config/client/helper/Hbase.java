@@ -42,34 +42,34 @@ import javax.security.auth.login.LoginException;
  * 1.1) How to get hbase client configuration (one hbase service bound)?
  * Configuration hbaseConf = Hbase.newInstance().createConfig();
  *
- * 1.2) How to get hbase connection (one hbase service bound)?
+ * 1.2) How to get hbase connection (one hbase service bound).
  * Connection hbaseConn = Hbase.newInstance().createConnection();
  *
- * 1.3) How to get hbase configuration for given service instance name?
+ * 1.3) How to get hbase configuration for given service instance name.
  * Configuration hbaseConf = Hbase.newInstance("hbase-instance").createConfig();
  *
- * 1.4) How to get hbase connection for given service instance name?
+ * 1.4) How to get hbase connection for given service instance name.
  * Connection hbaseConn = Hbase.newInstance("hbase-instance").createConnection();
  *
  *
  * 2) Use case with user identity from oauth (not yet implemented).
  *
- * 2.1) How to get hbase configuration (one hbase service bound)?
+ * 2.1) How to get hbase configuration (one hbase service bound).
  * JwtToken jwtToken;
  * ...
  * Configuration hbaseConf = Hbase.newInstance().createConfig(jwtToken);
  *
- * 2.2) How to get hbase connection (one hbase service bound)?
+ * 2.2) How to get hbase connection (one hbase service bound).
  * JwtToken jwtToken;
  * ...
  * Connection hbaseConn = Hbase.newInstance().createConnection(jwtToken);
  *
- * 2.3) How to get hbase configuration for given service instance name?
+ * 2.3) How to get hbase configuration for given service instance name.
  * JwtToken jwtToken;
  * ...
  * Configuration hbaseConf = Hbase.newInstance("hbase-instance").createConfig(jwtToken);
  *
- * 2.4) How to get file system object for given service instance name?
+ * 2.4) How to get file system object for given service instance name.
  * JwtToken jwtToken;
  * ...
  * Connection hbaseConn = Hbase.newInstance("hbase-instance").createConnection(jwtToken);
@@ -79,7 +79,7 @@ public final class Hbase {
   private final HadoopClient hadoopClient;
 
   /**
-   * Creates new instance of Hbase client helper. Assume that the only one instance of
+   * Creates new instance of Hbase client helper, assuming that the only one instance of
    * {@link org.trustedanalytics.hadoop.config.client.ServiceType#HBASE_TYPE} is bound.
    *
    * @return new instance of Hbase helper
@@ -111,7 +111,7 @@ public final class Hbase {
 
   /**
    * Create new hbase {@link Connection} object.
-   **
+   *
    * @return hbase connection system for service user (creds from app configuration)
    * @throws LoginException, IOException
    */
@@ -138,7 +138,7 @@ public final class Hbase {
   /**
    * Create new {@link Configuration} object.
    *
-   * Authentication (if needed) with the use of password from configuration.
+   * Authenticates(if needed) using password from configuration.
    *
    *  @return configuration
    *  @throws LoginException
@@ -151,7 +151,7 @@ public final class Hbase {
   /**
    * Create new {@link Configuration} object.
    *
-   * Authentication with the use of JwtToken from oauth server.
+   * Authenticates using JwtToken from oauth server.
    *
    * @param jwtToken authentication token
    * @return configuration
@@ -163,7 +163,7 @@ public final class Hbase {
   }
 
   /**
-   * Check if authentication method is set on kerberos?
+   * Checks if authentication method type is set to "Kerberos".
    *
    * @param hadoopConf service configuration
    * @return true if kerberos is set

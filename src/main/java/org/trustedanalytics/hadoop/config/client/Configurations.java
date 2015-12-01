@@ -21,27 +21,27 @@ import org.trustedanalytics.hadoop.config.internal.JsonConfigurationReader;
 import java.io.IOException;
 
 /**
- * Factory for application configuration helper object.
+ * App configuration factory.
  */
 public class Configurations {
 
   private Configurations() {}
 
   /**
-   * Creates new instance of application configuration. Configuration parameters
+   * Creates new instance of app configuration. Configuration parameters
    * are read from default environment variable {@link ConfigConstants#VCAP_SERVICES}.
    *
-   * @return new instance of application config
+   * @return new instance of app config
    */
   public static AppConfiguration newInstanceFromEnv() throws IOException {
     return newInstanceFromJson(System.getenv(ConfigConstants.VCAP_SERVICES));
   }
 
   /**
-   * Creates new instance of application configuration. Configuration has to be supplied in JSON
+   * Creates new instance of app configuration. Configuration has to be supplied in JSON
    * string.
    *
-   * @param  conf app config serialized to string
+   * @param  conf app config serialized to json
    * @return new instance of application config
    */
   public static AppConfiguration newInstanceFromJson(String conf) throws IOException {

@@ -16,7 +16,7 @@
 package org.trustedanalytics.hadoop.config.client;
 
 /**
- * Oauth token representation.
+ * Oauth2 token representation.
  */
 public interface JwtToken {
 

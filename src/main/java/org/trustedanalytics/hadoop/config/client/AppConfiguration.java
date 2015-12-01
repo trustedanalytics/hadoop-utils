@@ -19,15 +19,15 @@ import java.util.List;
 
 /**
  * Current use cases :
- * 1. App is using one instance of service, (choosing by type {@link ServiceType})
- * 2. App is using many instance of service of the same type.
- *    For instance two hbase instances, src and dst, (choosing by instance name)
- * 3. App will ask for all instances of the given type.
+ * 1. App is using one instance of service (selected by type {@link ServiceType})
+ * 2. App is using many instances of service of the same type.
+ *    For instance : two hbase instances, src and dst, (selected by instance name)
+ * 3. App can ask for all instances of the given type.
  */
 public interface AppConfiguration {
 
   /**
-   * Return cloud foundry service configuration for service instance named serviceInstanceName.
+   * Returns Cloud Foundry service configuration for service instance named serviceInstanceName.
    *
    * @param serviceInstanceName service instance name
    * @return service configuration
@@ -35,23 +35,22 @@ public interface AppConfiguration {
   ServiceInstanceConfiguration getServiceConfig(String serviceInstanceName);
 
   /**
-   * Return cloud foundry service configuration for service in{}stance given type.
+   * Returns Cloud Foundry service configuration for service instance with given type.
    *
-   * @param serviceTypeLocation config section localization for service type
+   * @param serviceTypeLocation config section location for service type
    * @return service configuration
-   * @throws IllegalStateException throws when is impossible to find/determine service instance
-   * which configuration has to be returned
-   * (for example: No instance of given type was bound. More then one instances the same type was
-   * bound)
+   * @throws IllegalStateException when it is impossible to find service instance of a given type
+   * (for example: No instance of a given type was bound or more instances of the same type were
+   * bound).
    */
   ServiceInstanceConfiguration getServiceConfig(ServiceType serviceTypeLocation)
       throws IllegalStateException;
 
   /**
-   * Return list of cloud foundry service configurations for all service instances given type.
+   * Returns list of Cloud Foundry services configurations for all service instances of a specified type.
    *
-   * @param serviceTypeLocation config section localization for service type
-   * @return configs for all service instances specified type
+   * @param serviceTypeLocation config section location
+   * @return configs for all service instances of a specified type
    */
   List<ServiceInstanceConfiguration> getServiceConfigList(ServiceType serviceTypeLocation);
 

@@ -185,9 +185,10 @@ class HadoopClient {
             try {
               return Configurations.newInstanceFromEnv();
             } catch (IOException ignore) {
-              throw new IllegalStateException("Can't read configuration from environment! "
-                                              + "Probably not set env variable "
-                                              + ConfigConstants.VCAP_SERVICES + "!", ignore);
+              throw new IllegalStateException("Unable to read configuration. Environment variable "
+                                              + ConfigConstants.VCAP_SERVICES +
+                                              " is probably not correctly set.",
+                                              ignore);
             }
           });
       getServiceType().

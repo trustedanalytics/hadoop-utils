@@ -28,6 +28,8 @@ public final class CloudFoundryAppConfiguration implements AppConfiguration {
 
   private ConfigNode rootConfigNode;
 
+  private CloudFoundryAppConfiguration() {}
+
   CloudFoundryAppConfiguration(ConfigNode node) {
     this.rootConfigNode = node;
   }

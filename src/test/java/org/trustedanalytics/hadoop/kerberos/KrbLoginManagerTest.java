@@ -43,7 +43,7 @@ public class KrbLoginManagerTest {
   private static File keyTabForAnotherJojo;
 
   @Before
-  public void startUp() throws Exception {
+  public void  startUp() throws Exception {
     cleanEnv();
     File testDir = createTestDir();
     kdc = new MiniKdc(createMiniKdcConf(), testDir);
@@ -106,7 +106,8 @@ public class KrbLoginManagerTest {
 
   private static Properties createMiniKdcConf() {
     Properties conf = MiniKdc.createConf();
-    conf.put(MiniKdc.DEBUG, true);
+    conf.put(MiniKdc.DEBUG, false);
+    conf.put(MiniKdc.KDC_PORT, "0");
     return conf;
   }
 

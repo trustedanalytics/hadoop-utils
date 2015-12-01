@@ -22,12 +22,12 @@ import org.trustedanalytics.hadoop.config.internal.ConfigPath;
 import org.trustedanalytics.hadoop.config.internal.Path;
 
 /**
- * Representation of configuration properties.
+ * Configuration properties.
  */
 public enum Property implements Path {
 
   /**
-   * URI to hdfs catalog exposed to use.
+   * Hdfs directory URI used by broker.
    */
   HDFS_URI(ConfigPath.createPath().add(configNode ->
                                            Lists.newArrayList(configNode.find(
@@ -53,7 +53,7 @@ public enum Property implements Path {
   ),
 
   /**
-   *
+   *  Zookeeper cluster address.
    */
   ZOOKEPER_URI(ConfigPath.createPath().add(configNode ->
                                             Lists.newArrayList(
@@ -61,7 +61,7 @@ public enum Property implements Path {
   ),
 
   /**
-   * Zookeeper node exposed to use.
+   * Zookeeper node used by broker.
    */
  ZOOKEPER_ZNODE(ConfigPath.createPath().add(configNode ->
                                             Lists.newArrayList(
@@ -69,7 +69,7 @@ public enum Property implements Path {
   ),
 
   /**
-   * Headless account name, use to authenticate in kerberos.
+   * Headless account name, used for authentication in Kerberos.
    */
  USER(ConfigPath.createPath().add(configNode ->
                                             Lists.newArrayList(
@@ -78,7 +78,7 @@ public enum Property implements Path {
   ),
 
   /**
-   * Headless account password, use to authenticate in kerberos.
+   * Headless account password, used for authentication in Kerberos.
    */
   PASSWORD(ConfigPath.createPath().add(configNode ->
                                            Lists.newArrayList(
@@ -88,7 +88,7 @@ public enum Property implements Path {
   ),
 
   /**
-   * Hbase namespace exposed to use.
+   * Hbase namespace used by broker.
    */
   HBASE_NAMESPACE(ConfigPath.createPath().add(configNode ->
                                                   Lists.newArrayList(
