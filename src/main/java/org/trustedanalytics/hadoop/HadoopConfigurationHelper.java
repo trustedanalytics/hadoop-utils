@@ -15,10 +15,9 @@
  */
 package org.trustedanalytics.hadoop;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hadoop.conf.Configuration;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.trustedanalytics.hadoop.config.internal.ConfigConstants;
 
 import java.io.IOException;
@@ -95,7 +94,6 @@ public final class HadoopConfigurationHelper {
      * @param jsonConf string with configuration
      * @param type service type
      * @return map of configuration properties
-     * @throws JsonProcessingException
      * @throws IOException
      */
     public static Optional<Map<String, String>> getHadoopConfByServiceName(String jsonConf,
@@ -108,11 +106,11 @@ public final class HadoopConfigurationHelper {
     private static Map<String, String> parse(JsonNode jsonNode) {
         Map<String, String> found = new HashMap<>();
         JsonNode hadoopConfParent = jsonNode.findParent(ConfigConstants.HADOOP_CONFIG_KEY_VALUE);
-        Iterator<JsonNode> trustedAnalyticsConfSections = hadoopConfParent.getElements();
+        Iterator<JsonNode> trustedAnalyticsConfSections = hadoopConfParent.elements();
         trustedAnalyticsConfSections.forEachRemaining(entry -> {
-            Iterator<Map.Entry<String, JsonNode>> paramRowfields = entry.getFields();
+            Iterator<Map.Entry<String, JsonNode>> paramRowfields = entry.fields();
             paramRowfields.forEachRemaining(paramEntry -> found.put(paramEntry.getKey(),
-                    paramEntry.getValue().getTextValue()));
+                    paramEntry.getValue().textValue()));
         });
         return found;
     }

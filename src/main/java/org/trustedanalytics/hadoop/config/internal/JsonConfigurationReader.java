@@ -15,8 +15,8 @@
  */
 package org.trustedanalytics.hadoop.config.internal;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 

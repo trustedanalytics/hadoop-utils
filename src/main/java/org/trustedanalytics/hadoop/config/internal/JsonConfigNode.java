@@ -15,8 +15,8 @@
  */
 package org.trustedanalytics.hadoop.config.internal;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Preconditions;
-import org.codehaus.jackson.JsonNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,16 +50,16 @@ public class JsonConfigNode implements ConfigNode {
   public List<ConfigNode> getChildren() {
     List<ConfigNode> ret = new ArrayList<>();
     if (root.isArray()) {
-      root.getElements().forEachRemaining(child -> {
+      root.elements().forEachRemaining(child -> {
         JsonNode nameNode = child.get(ConfigConstants.INSTANCE_NAME_PROP_NAME);
         if (nameNode == null) {
           ret.add(createInstance(child));
         } else {
-          ret.add(createInstance(nameNode.getValueAsText(), child));
+          ret.add(createInstance(nameNode.asText(), child));
         }
       });
     } else {
-      root.getFields().forEachRemaining(child -> {
+      root.fields().forEachRemaining(child -> {
         String localName = child.getKey();
         JsonNode value = child.getValue();
         ret.add(createInstance(localName, value));
@@ -99,7 +99,7 @@ public class JsonConfigNode implements ConfigNode {
                                    "None of " + name + " nodes found in configuration");
     //We assume that only one child node meets these conditions.
     Predicate<JsonNode> conditions =
-        parent -> parent.get(name).isTextual() && parent.get(name).getTextValue().equals(value);
+        parent -> parent.get(name).isTextual() && parent.get(name).textValue().equals(value);
     Optional<JsonNode> found = parents.stream().filter(conditions).findFirst();
     return createInstance(value,
         found.orElseThrow(() -> new NullPointerException("Can't find child node that has name "
@@ -109,7 +109,7 @@ public class JsonConfigNode implements ConfigNode {
 
   @Override
   public String value() {
-    return Preconditions.checkNotNull(root.getValueAsText());
+    return Preconditions.checkNotNull(root.asText());
   }
 
   @Override
