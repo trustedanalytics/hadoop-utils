@@ -37,14 +37,13 @@ import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ConnectionFactory.class,
                  HBaseConfiguration.class})
 public class HbaseTest {
 
-  private static String ENV_VCAP_SERVICES_FILE_PATH = "/env_vcap_service.json";
+  private static final String ENV_VCAP_SERVICES_FILE_PATH = "/env_vcap_service.json";
 
   private AppConfiguration appConfiguration;
 

@@ -13,25 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trustedanalytics.hadoop;
+package org.trustedanalytics.hadoop.config.client.oauth;
 
-@Deprecated
-public enum HadoopServiceType {
+/**
+ * Oauth2 token representation.
+ */
+public interface JwtToken {
 
-  HDFS("hdfs"),
+  String getUserName();
 
-  YARN("yarn"),
-
-  HBASE("hbase");
-
-  private String typeName;
-
-  HadoopServiceType(String name) {
-    this.typeName = name;
-  }
-
-  public String getTypeName() {
-    return this.typeName;
-  }
-
+  String getRawToken();
 }

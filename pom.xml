@@ -10,13 +10,13 @@
     </parent>
     <artifactId>hadoop-utils</artifactId>
 
-    <version>0.5.5</version>
+    <version>0.5.6</version>
     <properties>
         <hbaseVersion>1.0.0-cdh5.4.2.1</hbaseVersion>
-        <jacoco-measurement-instructions>0.714</jacoco-measurement-instructions>
-        <jacoco-measurement-branches>0.808</jacoco-measurement-branches>
-        <jacoco-measurement-lines>0.677</jacoco-measurement-lines>
-        <jacoco-measurement-classes>0.689</jacoco-measurement-classes>
+        <jacoco-measurement-instructions>0.691</jacoco-measurement-instructions>
+        <jacoco-measurement-branches>0.766</jacoco-measurement-branches>
+        <jacoco-measurement-lines>0.650</jacoco-measurement-lines>
+        <jacoco-measurement-classes>0.666</jacoco-measurement-classes>
     </properties>
     <profiles>
         <profile>
@@ -134,6 +134,11 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bitbucket.b_c</groupId>
+            <artifactId>jose4j</artifactId>
+            <version>0.4.4</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>

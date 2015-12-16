@@ -18,7 +18,7 @@ package org.trustedanalytics.hadoop.config.client.helper;
 import org.apache.hadoop.conf.Configuration;
 import org.trustedanalytics.hadoop.config.client.AppConfiguration;
 import org.trustedanalytics.hadoop.config.client.Configurations;
-import org.trustedanalytics.hadoop.config.client.JwtToken;
+import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
 import org.trustedanalytics.hadoop.config.client.Property;
 import org.trustedanalytics.hadoop.config.client.ServiceInstanceConfiguration;
 import org.trustedanalytics.hadoop.config.client.ServiceType;
@@ -62,7 +62,11 @@ class HadoopClient {
    * {@inheritDoc}
    */
   public Configuration createConfig(JwtToken jwtToken) throws LoginException, IOException {
-    throw new UnsupportedOperationException("Not implemented, yet!");
+    Configuration hadoopConf = this.serviceConfiguration.asHadoopConfiguration();
+    if (isKerberosEnabled(hadoopConf)) {
+      loginManager.loginInHadoop(getLoggedUserIdentity(jwtToken), hadoopConf);
+    }
+    return hadoopConf;
   }
 
   /**
@@ -76,6 +80,10 @@ class HadoopClient {
     String userName = getKrbServiceProperty(Property.USER);
     String pass = getKrbServiceProperty(Property.PASSWORD);
     return this.loginManager.loginWithCredentials(userName, pass.toCharArray());
+  }
+
+  Subject getLoggedUserIdentity(JwtToken token) throws LoginException {
+    return this.loginManager.loginWithJWTtoken(token);
   }
 
   String getServiceProperty(Property property) {
@@ -113,7 +121,7 @@ class HadoopClient {
    */
   static class Builder {
 
-    private static String KRB_SERVICE_DEFAULT_NAME = "kerberos-service";
+    private final static String KRB_SERVICE_DEFAULT_NAME = "kerberos-service";
 
     private String serviceName;
 
@@ -125,7 +133,7 @@ class HadoopClient {
 
     private ServiceType serviceType;
 
-    private HadoopClient hadoopClient = new HadoopClient();
+    private final HadoopClient hadoopClient = new HadoopClient();
 
     private Builder() {
     }
@@ -140,7 +148,7 @@ class HadoopClient {
     }
 
     public Builder withKrbServiceName(String krbServiceName) {
-      this.krbServiceName = serviceName;
+      this.krbServiceName = krbServiceName;
       return this;
     }
 

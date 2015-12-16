@@ -19,7 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-import org.trustedanalytics.hadoop.config.client.JwtToken;
+import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
 import org.trustedanalytics.hadoop.config.client.Property;
 import org.trustedanalytics.hadoop.config.client.ServiceType;
 
@@ -133,7 +133,10 @@ public final class Hdfs {
                                                                IOException,
                                                                InterruptedException,
                                                                URISyntaxException {
-    throw new UnsupportedOperationException("Not implemented, yet!");
+    Configuration hadoopConf = createConfig(jwtToken);
+    String user = jwtToken.getUserName();
+    URI hdfsUri = new URI(hadoopClient.getServiceProperty(Property.HDFS_URI));
+    return FileSystem.get(hdfsUri, hadoopConf, user);
   }
 
   /**

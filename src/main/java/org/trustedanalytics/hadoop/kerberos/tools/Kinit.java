@@ -17,7 +17,6 @@ package org.trustedanalytics.hadoop.kerberos.tools;
 
 import com.beust.jcommander.JCommander;
 
-import org.slf4j.LoggerFactory;
 import org.trustedanalytics.hadoop.kerberos.KrbLoginManager;
 import org.trustedanalytics.hadoop.kerberos.KrbLoginManagerFactory;
 
@@ -28,8 +27,6 @@ import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
 public class Kinit {
-
-  private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Kinit.class);
 
   public static void main(String[] args)
       throws LoginException, IOException, KrbException, InterruptedException {

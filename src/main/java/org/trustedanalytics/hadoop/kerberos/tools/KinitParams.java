@@ -17,7 +17,7 @@ package org.trustedanalytics.hadoop.kerberos.tools;
 
 import com.beust.jcommander.Parameter;
 
-public class KinitParams {
+class KinitParams {
 
   @Parameter(names = {"-realm", "-r"}, description = "Default realm", required = true)
   private String realm;

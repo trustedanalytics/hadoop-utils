@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 public class ConfigPath {
 
-  List<Function<ConfigNode, List<ConfigNode>>> stack = new ArrayList<>();
+  private final List<Function<ConfigNode, List<ConfigNode>>> stack = new ArrayList<>();
 
   private ConfigPath() {
   }

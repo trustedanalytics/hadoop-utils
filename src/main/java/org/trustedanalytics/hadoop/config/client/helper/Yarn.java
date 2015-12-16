@@ -18,7 +18,7 @@ package org.trustedanalytics.hadoop.config.client.helper;
 import com.google.common.annotations.VisibleForTesting;
 
 import org.apache.hadoop.conf.Configuration;
-import org.trustedanalytics.hadoop.config.client.JwtToken;
+import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
 import org.trustedanalytics.hadoop.config.client.Property;
 import org.trustedanalytics.hadoop.config.client.ServiceType;
 

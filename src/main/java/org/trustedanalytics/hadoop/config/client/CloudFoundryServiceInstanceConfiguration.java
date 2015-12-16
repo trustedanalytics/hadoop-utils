@@ -36,7 +36,9 @@ final class CloudFoundryServiceInstanceConfiguration implements ServiceInstanceC
   private static final Logger LOGGER =
       LoggerFactory.getLogger(CloudFoundryServiceInstanceConfiguration.class);
 
-  private CloudFoundryServiceInstanceConfiguration() {}
+  private CloudFoundryServiceInstanceConfiguration() {
+
+  }
 
   private CloudFoundryServiceInstanceConfiguration(ConfigNode conf) {
     this.configuration = conf;

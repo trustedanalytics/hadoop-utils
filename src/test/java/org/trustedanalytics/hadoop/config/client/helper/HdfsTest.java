@@ -43,7 +43,7 @@ import static org.mockito.Mockito.verify;
 @PrepareForTest(FileSystem.class)
 public class HdfsTest {
 
-  private static String ENV_VCAP_SERVICES_FILE_PATH = "/env_vcap_service.json";
+  private static final String ENV_VCAP_SERVICES_FILE_PATH = "/env_vcap_service.json";
 
   private AppConfiguration appConfiguration;
 

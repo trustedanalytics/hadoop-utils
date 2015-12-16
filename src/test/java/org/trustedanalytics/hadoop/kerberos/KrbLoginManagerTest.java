@@ -16,29 +16,28 @@
 package org.trustedanalytics.hadoop.kerberos;
 
 import com.google.common.base.Preconditions;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.minikdc.MiniKdc;
-import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.security.auth.Subject;
 import java.io.File;
 import java.util.Properties;
+
+import javax.security.auth.Subject;
 
 public class KrbLoginManagerTest {
 
   private static MiniKdc kdc;
 
-  private static String PRINCIPAL_NAME = "jojo";
+  private static final String PRINCIPAL_NAME = "jojo";
 
-  private static String ANOTHER_PRINCIPAL_NAME = "anotherJojo/sys";
+  private static final String ANOTHER_PRINCIPAL_NAME = "anotherJojo/sys";
 
-  private static String PRINCIPAL_PASS = "jojo1";
+  private static final String PRINCIPAL_PASS = "jojo1";
 
   private static File keyTabForAnotherJojo;
 

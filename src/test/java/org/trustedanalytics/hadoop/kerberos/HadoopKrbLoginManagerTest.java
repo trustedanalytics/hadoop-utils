@@ -16,34 +16,33 @@
 package org.trustedanalytics.hadoop.kerberos;
 
 import org.hamcrest.collection.IsMapContaining;
+import org.junit.Assert;
 import org.junit.Test;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
-import sun.security.krb5.PrincipalName;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
 
-import java.security.AccessControlContext;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class HadoopKrbLoginManagerTest {
 
-  private String kdc = "addr";
+  private final String kdc = "addr";
 
-  private String realm = "@realm";
+  private final String realm = "@realm";
 
-  private String login = "some";
+  private final String login = "some";
 
-  private String pathToKeyTab = "/some/path";
-
-  private char[] pass = "password".toCharArray();
+  private final String pathToKeyTab = "/some/path";
 
   @Test
   public void testSetKerbConfigFromOpts_someOptionSet_appConfigurationEntrySet() throws Exception {
@@ -118,7 +117,30 @@ public class HadoopKrbLoginManagerTest {
   public void testGetUserName_nullSuject_throwsException() throws Exception {
     HadoopKrbLoginManager.FactoryHelper helper = mock(HadoopKrbLoginManager.FactoryHelper.class);
     HadoopKrbLoginManager toTest = new HadoopKrbLoginManager(kdc, realm, helper);
-    toTest.getUserName(null);
+    toTest.getUserName((Subject) null);
+  }
+
+  @Test
+  public void testGetUserName_jwtToken_returnUserName() throws Exception {
+    HadoopKrbLoginManager.FactoryHelper helper = mock(HadoopKrbLoginManager.FactoryHelper.class);
+    HadoopKrbLoginManager toTest = new HadoopKrbLoginManager(kdc, realm, helper);
+    String actual = toTest.getUserName(
+        "eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiI1OWViZTBjOC1kYzE4LTQwNGQtOTJlOC01MmQzMWEwZW"
+        + "RkYjQiLCJzdWIiOiJhNTA5YjQ4OC05NTQ4LTRlNDItOTA2Yi1hZWU0MjBlM2FmMmYiLCJzY29"
+        + "wZSI6WyJzY2ltLnJlYWQiLCJjb25zb2xlLmFkbWluIiwiY2xvdWRfY29udHJvbGxlci5hZG1p"
+        + "biIsInBhc3N3b3JkLndyaXRlIiwic2NpbS53cml0ZSIsIm9wZW5pZCIsImNsb3VkX2NvbnRyb"
+        + "2xsZXIud3JpdGUiLCJjbG91ZF9jb250cm9sbGVyLnJlYWQiLCJkb3BwbGVyLmZpcmVob3NlIl"
+        + "0sImNsaWVudF9pZCI6ImNmIiwiY2lkIjoiY2YiLCJhenAiOiJjZiIsImdyYW50X3R5cGUiOiJ"
+        + "wYXNzd29yZCIsInVzZXJfaWQiOiJhNTA5YjQ4OC05NTQ4LTRlNDItOTA2Yi1hZWU0MjBlM2Fm"
+        + "MmYiLCJ1c2VyX25hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW4iLCJyZXZfc2lnIjoiOWY1O"
+        + "GE1OTkiLCJpYXQiOjE0NTAzNDE5ODMsImV4cCI6MTQ1MDM0MjU4MywiaXNzIjoiaHR0cHM6Ly"
+        + "91YWEubWVnYWNsaXRlLmdvdGFwYWFzLmV1L29hdXRoL3Rva2VuIiwiemlkIjoidWFhIiwiYXV"
+        + "kIjpbImRvcHBsZXIiLCJzY2ltIiwiY29uc29sZSIsIm9wZW5pZCIsImNsb3VkX2NvbnRyb2xs"
+        + "ZXIiLCJwYXNzd29yZCIsImNmIl19.be7j33CimvH8WDDXU5Z84mVNPgq_aUwMCWFJrbwqW6Nb"
+        + "SOSupb9dxe7TXxuas7MuQAmhgpCwqV3L0zsx0Yhrcf1XDNITlTT1NIkwMx0swh8CAArsKJG6m"
+        + "mjg6LYxnFL0IhYe0Ak3F4HduQrkHKCyzg5cRT7htrNSQvpcAPyU08c");
+    String expected = "admin";
+    Assert.assertEquals(expected, actual);
   }
 
   @Test(expected = IllegalArgumentException.class)

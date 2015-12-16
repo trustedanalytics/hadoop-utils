@@ -24,7 +24,7 @@ import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.security.User;
 import org.apache.hadoop.hbase.security.UserProvider;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.trustedanalytics.hadoop.config.client.JwtToken;
+import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
 import org.trustedanalytics.hadoop.config.client.Property;
 import org.trustedanalytics.hadoop.config.client.ServiceType;
 
@@ -131,8 +131,12 @@ public final class Hbase {
    * @param jwtToken oauth token
    * @return hbase file system for user that is identified by jwt token
    */
-  public Connection  createConnection(JwtToken jwtToken) {
-    throw new UnsupportedOperationException("Not implemented, yet!");
+  public Connection  createConnection(JwtToken jwtToken) throws LoginException, IOException {
+    Configuration hbaseConf = HBaseConfiguration.create(hadoopClient.createConfig());
+    User user = UserProvider.instantiate(hbaseConf)
+        .create(UserGroupInformation.getUGIFromSubject(hadoopClient
+                                                           .getLoggedUserIdentity(jwtToken)));
+    return ConnectionFactory.createConnection(hbaseConf, user);
   }
 
   /**

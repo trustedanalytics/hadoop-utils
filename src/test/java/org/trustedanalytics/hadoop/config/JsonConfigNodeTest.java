@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.*;
 
 public class JsonConfigNodeTest {
 
-  ConfigNode root;
+  private ConfigNode root;
 
   @Before
   public void setUp() throws Exception {

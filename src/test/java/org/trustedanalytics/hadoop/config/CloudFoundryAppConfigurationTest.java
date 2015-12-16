@@ -36,7 +36,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class CloudFoundryAppConfigurationTest {
 
-  private static String ENV_VCAP_SERVICES_FILE_PATH = "/env_vcap_service.json";
+  private static final String ENV_VCAP_SERVICES_FILE_PATH = "/env_vcap_service.json";
 
   private static String vcapServices;
 

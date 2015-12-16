@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 
 public class JsonConfigNode implements ConfigNode {
 
-  private JsonNode root;
+  private final JsonNode root;
 
   private String name = null;
 

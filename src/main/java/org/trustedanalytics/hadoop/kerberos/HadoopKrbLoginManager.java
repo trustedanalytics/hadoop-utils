@@ -20,7 +20,12 @@ import com.google.common.base.Strings;
 
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.jose4j.jwt.consumer.InvalidJwtException;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.jwt.consumer.JwtConsumerBuilder;
+import org.jose4j.jwt.consumer.JwtContext;
 import org.slf4j.LoggerFactory;
+import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
 
 import sun.security.krb5.KrbAsReqBuilder;
 import sun.security.krb5.KrbException;
@@ -29,8 +34,10 @@ import sun.security.krb5.internal.KDCOptions;
 import sun.security.krb5.internal.ccache.Credentials;
 import sun.security.krb5.internal.ccache.CredentialsCache;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +67,7 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
 
   static final String KRB5_KINIT_CMD_PROP_NAME = "hadoop.kerberos.kinit.command";
 
-  static final String KRB5_USE_SUBJECT_CREDS_LIMITATION = "javax.security.auth.useSubjectCredsOnly";
+  static final  String KRB5_USE_SUBJECT_CREDS_LIMITATION = "javax.security.auth.useSubjectCredsOnly";
 
   static final String KRB5_CONF = "java.security.krb5.conf";
 
@@ -90,8 +97,13 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
   }
 
   @Override
-  public Subject loginWithJWTtoken(String jwtToken) throws LoginException {
-    return null;
+  public Subject loginWithJWTtoken(JwtToken jwtToken) throws LoginException {
+    String userName = jwtToken.getUserName();
+    setKerbConfigFromOpts(userName, getDefaultOptionsForPrincipal(userName));
+    LoginContext lc = helper.getLoginContext(userName,
+                                             new FixedPasswordHandler("some".toCharArray()));
+    helper.cacheKrbCredentials(jwtToken);
+    return login(lc);
   }
 
   @Override
@@ -129,11 +141,24 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
     return UserGroupInformation.getBestUGI(ticketCacheLocation(subject), getUserName(subject));
   }
 
-  String getUserName(Subject subject) {
+  static String getUserName(Subject subject) {
     Preconditions.checkNotNull(subject, "Subject can't be null!");
     Preconditions.checkArgument(!subject.getPrincipals().isEmpty(),
                                 "Can't find any principal in given Subject!");
     return subject.getPrincipals().iterator().next().getName();
+  }
+
+  public static String getUserName(String jwtToken) {
+    try {
+      JwtConsumer consumer = new JwtConsumerBuilder().setSkipAllValidators()
+          .setDisableRequireSignature()
+          .setSkipSignatureVerification().build();
+
+      JwtContext context = consumer.process(jwtToken);
+      return (String) context.getJwtClaims().getClaimsMap().get("user_name");
+    } catch (InvalidJwtException e) {
+      throw new IllegalArgumentException(e);
+    }
   }
 
   String ticketCacheLocation(Subject subject) {
@@ -193,7 +218,7 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
 
   static final class FixedPasswordHandler implements CallbackHandler {
 
-    private char[] password;
+    private final char[] password;
 
     public FixedPasswordHandler(char[] password) {
       this.password = password;
@@ -244,11 +269,39 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
       }
     }
 
+    synchronized void cacheKrbCredentials(JwtToken jwtToken) throws LoginException {
+      String princName = jwtToken.getUserName() +
+                         PrincipalName.NAME_REALM_SEPARATOR_STR +
+                         System.getProperty(KRB5_REALM);
+      String path = System.getProperty("user.dir");
+      String kinit = path + "/bin/ktinit -t " + jwtToken.getRawToken()
+                     + " -c " + HadoopKrbLoginManager.ticketCacheLocation(princName)
+                     + " -P " + princName;
+      Runtime run = Runtime.getRuntime();
+      try {
+        Process pr = run.exec(kinit);
+        pr.waitFor();
+        BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+        buf.lines().forEach(LOGGER::info);
+        if (pr.exitValue() != 0) {
+          StringBuilder toLog = new StringBuilder("ktinit execution failed: \n");
+          BufferedReader err = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+          err.lines().forEach(line -> toLog.append(line).append("\n"));
+          throw new LoginException(toLog.toString());
+        }
+      } catch (IOException | InterruptedException e) {
+        LoginException propagate = new LoginException(e.getMessage());
+        propagate.initCause(e);
+        throw propagate;
+      }
+    }
+
     private KrbAsReqBuilder prepareTgtReq(PrincipalName pName, char[] secret) throws KrbException {
       return new KrbAsReqBuilder(pName, secret);
     }
 
-    private KrbAsReqBuilder prepareTgtReq(PrincipalName pName, String keyTabLocation) throws KrbException {
+    private KrbAsReqBuilder prepareTgtReq(PrincipalName pName, String keyTabLocation)
+        throws KrbException {
       KeyTab secret = KeyTab.getInstance(new File(keyTabLocation));
       return new KrbAsReqBuilder(pName, secret);
     }

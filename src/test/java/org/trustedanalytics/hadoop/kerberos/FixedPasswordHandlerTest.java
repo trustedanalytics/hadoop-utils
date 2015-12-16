@@ -25,7 +25,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 public class FixedPasswordHandlerTest {
 
-  private static String PASSWORD = "haselko_maselko";
+  private static final String PASSWORD = "haselko_maselko";
 
   @Test(expected = UnsupportedCallbackException.class)
   public void testHandle_getUnsupportedCallbackType_throwException() throws Exception {

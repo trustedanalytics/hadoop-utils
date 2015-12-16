@@ -25,7 +25,8 @@ import java.io.IOException;
  */
 public class Configurations {
 
-  private Configurations() {}
+  private Configurations() {
+  }
 
   /**
    * Creates new instance of app configuration. Configuration parameters

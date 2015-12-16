@@ -17,6 +17,7 @@ package org.trustedanalytics.hadoop.kerberos;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
 
 import sun.security.krb5.KrbException;
 
@@ -26,7 +27,7 @@ import java.io.IOException;
 
 public interface KrbLoginManager {
 
-  Subject loginWithJWTtoken(String jwtToken) throws LoginException;
+  Subject loginWithJWTtoken(JwtToken jwtToken) throws LoginException;
 
   Subject loginWithCredentials(String user, char[] password) throws LoginException;
 

@@ -75,7 +75,7 @@ public enum ServiceType implements Path {
                          configNode.find(ConfigConstants.GEAR_PUMP_SERVICE_TYPE_NAME)))
   );
 
-  private ConfigPath configPath;
+  private final ConfigPath configPath;
 
   ServiceType(ConfigPath path) {
     this.configPath = path;
