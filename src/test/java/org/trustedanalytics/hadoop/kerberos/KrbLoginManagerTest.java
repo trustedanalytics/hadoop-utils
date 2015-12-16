@@ -36,7 +36,7 @@ public class KrbLoginManagerTest {
 
   private static String PRINCIPAL_NAME = "jojo";
 
-  private static String ANOTHER_PRINCIPAL_NAME = "anotherJojo";
+  private static String ANOTHER_PRINCIPAL_NAME = "anotherJojo/sys";
 
   private static String PRINCIPAL_PASS = "jojo1";
 

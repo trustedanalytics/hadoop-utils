@@ -136,8 +136,13 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
     return subject.getPrincipals().iterator().next().getName();
   }
 
-  private String ticketCacheLocation(Subject subject) {
-    return KRB5_CREDENTIALS_CACHE_DIR + getUserName(subject);
+  String ticketCacheLocation(Subject subject) {
+    return ticketCacheLocation(getUserName(subject));
+  }
+
+  static String ticketCacheLocation(String princName) {
+    return KRB5_CREDENTIALS_CACHE_DIR
+           + princName.replace(PrincipalName.NAME_COMPONENT_SEPARATOR, '_');
   }
 
   private void initKerberos(String kdc, String defaultRealm) {
@@ -164,7 +169,8 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
         new AppConfigurationEntry[]{new AppConfigurationEntry(KERB_MODULE,
                                                               LoginModuleControlFlag.REQUIRED,
                                                               opts)};
-    InMemoryMultiuserJaasConfiguration conf = (InMemoryMultiuserJaasConfiguration) Configuration.getConfiguration();
+    InMemoryMultiuserJaasConfiguration conf =
+        (InMemoryMultiuserJaasConfiguration) Configuration.getConfiguration();
     conf.append(username, appConfigurationEntry);
   }
 
@@ -179,9 +185,8 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
     options.put("refreshKrb5Config", "true");
     options.put("isInitiator", "true");
     options.put("clearPass", "false");
-    options.put("ticketCache", KRB5_CREDENTIALS_CACHE_DIR + user
-                               + PrincipalName.NAME_REALM_SEPARATOR_STR
-                               + System.getProperty(KRB5_REALM));
+    options.put("ticketCache", ticketCacheLocation(user + PrincipalName.NAME_REALM_SEPARATOR_STR
+                               + System.getProperty(KRB5_REALM)));
     options.put("debug", "true");
     return options;
   }
@@ -256,8 +261,7 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
                                                     + System.getProperty(KRB5_REALM),
                                                     PrincipalName.KRB_NT_SRV_INST);
       String cCacheLocation = "FILE:"
-                              + KRB5_CREDENTIALS_CACHE_DIR
-                              + pName.getName();
+                              + ticketCacheLocation(pName.getName());
 
       KDCOptions kdcOptions = new KDCOptions();
       kdcOptions.set(KDCOptions.FORWARDABLE, true);
