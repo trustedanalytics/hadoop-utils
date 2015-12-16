@@ -93,8 +93,15 @@ public enum Property implements Path {
   HBASE_NAMESPACE(ConfigPath.createPath().add(configNode ->
                                                   Lists.newArrayList(
                                                       configNode.find(ConfigConstants.HBASE_PROP_NAME_NAMESPACE)))
-  );
+  ),
 
+  /**
+   * Base64 from configuration zip.
+   */
+  HADOOP_ZIP(ConfigPath.createPath().add(configNode ->
+                                        Lists.newArrayList(
+                                            configNode.find(ConfigConstants.HADOOP_CONFIG_ZIP_VALUE).find(ConfigConstants.ZIP)))
+  );
 
 
   private ConfigPath configPath;

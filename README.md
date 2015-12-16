@@ -20,7 +20,7 @@ mvn clean install
 <dependency>
   <groupId>org.trustedanalytics</groupId>
   <artifactId>hadoop-utils</artifactId>
-  <version>0.5.0</version>
+  <version>0.5.4</version>
 </dependency>
 ```
 

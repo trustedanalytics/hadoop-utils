@@ -27,6 +27,10 @@ public final class ConfigConstants {
    */
   public static final String HADOOP_CONFIG_KEY_VALUE = "HADOOP_CONFIG_KEY";
 
+  public static final String HADOOP_CONFIG_ZIP_VALUE = "HADOOP_CONFIG_ZIP";
+
+  public static final String ZIP = "encoded_zip";
+
   public static final String KRB_CONF_NODE_NAME = "kerberos";
 
   public static final String KDC_ADRESS_PROP_NAME = "kdc";

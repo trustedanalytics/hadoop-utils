@@ -41,6 +41,17 @@ loginManager.loginInHadoop(loginManager.loginWithCredentials(user, pass.toCharAr
 ```
 Above example assumes that we have user provided service "kerberos-service" bound to application.
 
+##### Getting zip configuration
+
+Example:
+
+```
+AppConfiguration helper = Configurations.newInstanceFromEnv();
+Optional<String> zipFile =
+    helper.getServiceConfig("hbase-instance1").getProperty(Property.HADOOP_ZIP);
+```
+
+
 ##### Getting hdfs FileSystem.
 ```java
 FileSystem = FileSystem.get(new URI(hdfsConf.getProperty(Property.HDFS_URI).get()),
