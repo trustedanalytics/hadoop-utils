@@ -117,7 +117,7 @@ public class HadoopKrbLoginManagerTest {
   public void testGetUserName_nullSuject_throwsException() throws Exception {
     HadoopKrbLoginManager.FactoryHelper helper = mock(HadoopKrbLoginManager.FactoryHelper.class);
     HadoopKrbLoginManager toTest = new HadoopKrbLoginManager(kdc, realm, helper);
-    toTest.getUserName((Subject) null);
+    toTest.getPrincipalName((Subject) null);
   }
 
   @Test
@@ -143,12 +143,35 @@ public class HadoopKrbLoginManagerTest {
     Assert.assertEquals(expected, actual);
   }
 
+  @Test
+  public void testGetUserId_jwtToken_returnUserId() throws Exception {
+    HadoopKrbLoginManager.FactoryHelper helper = mock(HadoopKrbLoginManager.FactoryHelper.class);
+    HadoopKrbLoginManager toTest = new HadoopKrbLoginManager(kdc, realm, helper);
+    String actual = toTest.getUserId(
+        "eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiI1OWViZTBjOC1kYzE4LTQwNGQtOTJlOC01MmQzMWEwZW"
+        + "RkYjQiLCJzdWIiOiJhNTA5YjQ4OC05NTQ4LTRlNDItOTA2Yi1hZWU0MjBlM2FmMmYiLCJzY29"
+        + "wZSI6WyJzY2ltLnJlYWQiLCJjb25zb2xlLmFkbWluIiwiY2xvdWRfY29udHJvbGxlci5hZG1p"
+        + "biIsInBhc3N3b3JkLndyaXRlIiwic2NpbS53cml0ZSIsIm9wZW5pZCIsImNsb3VkX2NvbnRyb"
+        + "2xsZXIud3JpdGUiLCJjbG91ZF9jb250cm9sbGVyLnJlYWQiLCJkb3BwbGVyLmZpcmVob3NlIl"
+        + "0sImNsaWVudF9pZCI6ImNmIiwiY2lkIjoiY2YiLCJhenAiOiJjZiIsImdyYW50X3R5cGUiOiJ"
+        + "wYXNzd29yZCIsInVzZXJfaWQiOiJhNTA5YjQ4OC05NTQ4LTRlNDItOTA2Yi1hZWU0MjBlM2Fm"
+        + "MmYiLCJ1c2VyX25hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW4iLCJyZXZfc2lnIjoiOWY1O"
+        + "GE1OTkiLCJpYXQiOjE0NTAzNDE5ODMsImV4cCI6MTQ1MDM0MjU4MywiaXNzIjoiaHR0cHM6Ly"
+        + "91YWEubWVnYWNsaXRlLmdvdGFwYWFzLmV1L29hdXRoL3Rva2VuIiwiemlkIjoidWFhIiwiYXV"
+        + "kIjpbImRvcHBsZXIiLCJzY2ltIiwiY29uc29sZSIsIm9wZW5pZCIsImNsb3VkX2NvbnRyb2xs"
+        + "ZXIiLCJwYXNzd29yZCIsImNmIl19.be7j33CimvH8WDDXU5Z84mVNPgq_aUwMCWFJrbwqW6Nb"
+        + "SOSupb9dxe7TXxuas7MuQAmhgpCwqV3L0zsx0Yhrcf1XDNITlTT1NIkwMx0swh8CAArsKJG6m"
+        + "mjg6LYxnFL0IhYe0Ak3F4HduQrkHKCyzg5cRT7htrNSQvpcAPyU08c");
+    String expected = "a509b488-9548-4e42-906b-aee420e3af2f";
+    Assert.assertEquals(expected, actual);
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void testGetUserName_noPrincipalInSubject_throwsException() throws Exception {
     HadoopKrbLoginManager.FactoryHelper helper = mock(HadoopKrbLoginManager.FactoryHelper.class);
     HadoopKrbLoginManager toTest = new HadoopKrbLoginManager(kdc, realm, helper);
     Subject subject = new Subject();
-    toTest.getUserName(subject);
+    toTest.getPrincipalName(subject);
   }
 
 }

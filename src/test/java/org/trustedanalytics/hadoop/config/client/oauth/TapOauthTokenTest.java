@@ -41,6 +41,12 @@ public class TapOauthTokenTest {
   }
 
   @Test
+  public void testGetUserId_correctJWTtoken_returnsDecodedTapUserId() throws Exception {
+    JwtToken tapToken = new TapOauthToken(token);
+    assertThat(tapToken.getUserId(), is("c9853c12-cc42-4d7f-8aa9-b3ffa6b17507"));
+  }
+
+  @Test
   public void testGetRawToken_correctJWTtoken_returnsRawToken() throws Exception {
     JwtToken tapToken = new TapOauthToken(token);
     assertThat(tapToken.getRawToken(), is(token));

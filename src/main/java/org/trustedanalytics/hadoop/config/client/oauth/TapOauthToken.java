@@ -26,6 +26,8 @@ public final class TapOauthToken implements JwtToken {
 
   private String userName;
 
+  private String userId;
+
   public TapOauthToken(String token) {
     rawToken = token;
     try {
@@ -35,6 +37,7 @@ public final class TapOauthToken implements JwtToken {
 
       JwtContext context = consumer.process(rawToken);
       userName = (String) context.getJwtClaims().getClaimsMap().get("user_name");
+      userId = (String) context.getJwtClaims().getClaimsMap().get("user_id");
     } catch (InvalidJwtException e) {
       throw new IllegalStateException(e);
     }
@@ -48,5 +51,10 @@ public final class TapOauthToken implements JwtToken {
   @Override
   public String getRawToken() {
     return rawToken;
+  }
+
+  @Override
+  public String getUserId() {
+    return userId;
   }
 }

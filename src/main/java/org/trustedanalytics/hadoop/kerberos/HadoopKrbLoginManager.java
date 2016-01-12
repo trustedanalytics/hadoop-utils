@@ -20,12 +20,9 @@ import com.google.common.base.Strings;
 
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.jose4j.jwt.consumer.InvalidJwtException;
-import org.jose4j.jwt.consumer.JwtConsumer;
-import org.jose4j.jwt.consumer.JwtConsumerBuilder;
-import org.jose4j.jwt.consumer.JwtContext;
 import org.slf4j.LoggerFactory;
 import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
+import org.trustedanalytics.hadoop.config.client.oauth.TapOauthToken;
 
 import sun.security.krb5.KrbAsReqBuilder;
 import sun.security.krb5.KrbException;
@@ -98,9 +95,9 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
 
   @Override
   public Subject loginWithJWTtoken(JwtToken jwtToken) throws LoginException {
-    String userName = jwtToken.getUserName();
-    setKerbConfigFromOpts(userName, getDefaultOptionsForPrincipal(userName));
-    LoginContext lc = helper.getLoginContext(userName,
+    String userId = jwtToken.getUserId();
+    setKerbConfigFromOpts(userId, getDefaultOptionsForPrincipal(userId));
+    LoginContext lc = helper.getLoginContext(userId,
                                              new FixedPasswordHandler("some".toCharArray()));
     helper.cacheKrbCredentials(jwtToken);
     return login(lc);
@@ -138,10 +135,10 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
   @Override
   public UserGroupInformation getUGI(Subject subject) throws IOException {
     Preconditions.checkNotNull(subject, "Subject can't be null!");
-    return UserGroupInformation.getBestUGI(ticketCacheLocation(subject), getUserName(subject));
+    return UserGroupInformation.getBestUGI(ticketCacheLocation(subject), getPrincipalName(subject));
   }
 
-  static String getUserName(Subject subject) {
+  static String getPrincipalName(Subject subject) {
     Preconditions.checkNotNull(subject, "Subject can't be null!");
     Preconditions.checkArgument(!subject.getPrincipals().isEmpty(),
                                 "Can't find any principal in given Subject!");
@@ -149,20 +146,17 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
   }
 
   public static String getUserName(String jwtToken) {
-    try {
-      JwtConsumer consumer = new JwtConsumerBuilder().setSkipAllValidators()
-          .setDisableRequireSignature()
-          .setSkipSignatureVerification().build();
+    JwtToken token = new TapOauthToken(jwtToken);
+    return token.getUserName();
+  }
 
-      JwtContext context = consumer.process(jwtToken);
-      return (String) context.getJwtClaims().getClaimsMap().get("user_name");
-    } catch (InvalidJwtException e) {
-      throw new IllegalArgumentException(e);
-    }
+  public static String getUserId(String jwtToken) {
+    JwtToken token = new TapOauthToken(jwtToken);
+    return token.getUserId();
   }
 
   String ticketCacheLocation(Subject subject) {
-    return ticketCacheLocation(getUserName(subject));
+    return ticketCacheLocation(getPrincipalName(subject));
   }
 
   static String ticketCacheLocation(String princName) {
@@ -270,7 +264,7 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
     }
 
     synchronized void cacheKrbCredentials(JwtToken jwtToken) throws LoginException {
-      String princName = jwtToken.getUserName() +
+      String princName = jwtToken.getUserId() +
                          PrincipalName.NAME_REALM_SEPARATOR_STR +
                          System.getProperty(KRB5_REALM);
       String path = System.getProperty("user.dir");

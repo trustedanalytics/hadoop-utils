@@ -23,4 +23,7 @@ public interface JwtToken {
   String getUserName();
 
   String getRawToken();
+
+  String getUserId();
+
 }
