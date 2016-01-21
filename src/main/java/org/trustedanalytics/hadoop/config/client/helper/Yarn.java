@@ -15,16 +15,18 @@
  */
 package org.trustedanalytics.hadoop.config.client.helper;
 
-import com.google.common.annotations.VisibleForTesting;
-
-import org.apache.hadoop.conf.Configuration;
-import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
-import org.trustedanalytics.hadoop.config.client.Property;
-import org.trustedanalytics.hadoop.config.client.ServiceType;
-
 import java.io.IOException;
 
 import javax.security.auth.login.LoginException;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.yarn.client.api.YarnClient;
+import org.trustedanalytics.hadoop.config.client.Property;
+import org.trustedanalytics.hadoop.config.client.ServiceType;
+import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
+
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * Provides access to yarn client configuration. Applicable to services of type
@@ -94,6 +96,57 @@ public final class Yarn {
     return hadoopClient.createConfig(jwtToken);
   }
 
+  /**
+   * Create new {@link YarnClient} object.
+   *
+   *
+   *
+   * @return YarnClient
+   * @throws LoginException
+   * @throws IOException
+   */
+  public YarnClient createClient() throws LoginException, IOException {
+    Configuration config = createConfig();
+    String user = hadoopClient.getKrbServiceProperty(Property.USER);
+
+    return createYarnClient(user, config);
+  }
+
+  /**
+   * Create new {@link YarnClient} object.
+   *
+   *
+   * @param token oauth token
+   * @return YarnClient
+   * @throws LoginException
+   * @throws IOException
+   */
+  public YarnClient createClient(JwtToken token) throws LoginException, IOException {
+    Configuration config = createConfig(token);
+    String user = token.getUserId();
+
+    return createYarnClient(user, config);
+  }
+
+  /**
+   * Create new {@link YarnClient} object.
+   *
+   *
+   * @param user yarn user
+   * @param config hadoop configuration
+   * @return YarnClient
+   * @throws LoginException
+   * @throws IOException
+   */
+  private YarnClient createYarnClient(String user, Configuration config) throws IOException {
+    String ticketCachePath = config.get("hadoop.security.kerberos.ticket.cache.path");
+    UserGroupInformation ugi = UserGroupInformation.getBestUGI(ticketCachePath, user);
+    YarnClient client = new DelegatingYarnClient(YarnClient.createYarnClient(), new UgiWrapper(ugi));
+    client.init(config);
+
+    return client;
+  }
+  
   /**
    * Checks if authentication method type is set to "Kerberos".
    *
