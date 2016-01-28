@@ -268,7 +268,7 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
                          PrincipalName.NAME_REALM_SEPARATOR_STR +
                          System.getProperty(KRB5_REALM);
       String path = System.getProperty("user.dir");
-      String kinit = path + "/bin/ktinit -t " + jwtToken.getRawToken()
+      String kinit = path + "/krb5jwt/bin/ktinit -t " + jwtToken.getRawToken()
                      + " -c " + HadoopKrbLoginManager.ticketCacheLocation(princName)
                      + " -P " + princName;
       Runtime run = Runtime.getRuntime();

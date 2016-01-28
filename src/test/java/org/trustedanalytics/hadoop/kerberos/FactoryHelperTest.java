@@ -38,7 +38,7 @@ public class FactoryHelperTest {
     userDir = System.getProperty("user.dir");
     String testsDir = FactoryHelperTest.class.getClassLoader().getResource("").getPath();
     File ktinit =
-        new File(FactoryHelperTest.class.getClassLoader().getResource("bin/ktinit").toURI());
+        new File(FactoryHelperTest.class.getClassLoader().getResource("krb5jwt/bin/ktinit").toURI());
     if (!ktinit.setExecutable(true, true)) {
       throw new IllegalStateException("Can't initialize unit tests suite!");
     }

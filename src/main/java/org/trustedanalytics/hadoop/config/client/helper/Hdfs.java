@@ -134,7 +134,7 @@ public final class Hdfs {
                                                                InterruptedException,
                                                                URISyntaxException {
     Configuration hadoopConf = createConfig(jwtToken);
-    String user = jwtToken.getUserName();
+    String user = jwtToken.getUserId();
     URI hdfsUri = new URI(hadoopClient.getServiceProperty(Property.HDFS_URI));
     return FileSystem.get(hdfsUri, hadoopConf, user);
   }
