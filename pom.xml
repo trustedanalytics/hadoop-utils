@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.trustedanalytics</groupId>
         <artifactId>project-template</artifactId>
-        <version>0.4.4</version>
+        <version>0.4.8</version>
     </parent>
     <artifactId>hadoop-utils</artifactId>
 
-    <version>0.5.8</version>
+    <version>0.5.9</version>
     <properties>
         <hbaseVersion>1.0.0-cdh5.4.2.1</hbaseVersion>
         <jacoco-measurement-instructions>0.691</jacoco-measurement-instructions>
@@ -43,8 +43,6 @@
             </build>
         </profile>
     </profiles>
-
-    <build/>
 
     <dependencies>
         <dependency>
