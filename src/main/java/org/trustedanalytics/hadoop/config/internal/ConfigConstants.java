@@ -37,6 +37,10 @@ public final class ConfigConstants {
 
   public static final String REALM_NAME_PROP_NAME = "krealm";
 
+  public static final String KRB_CACERT_PROP_NAME = "cacert";
+
+  public static final String KRB_MODE_PROP_NAME = "enabled";
+
   public static final String HDFS_URI = "uri";
 
   public static final String ZOOKEEPER_CLUSTER = "zk.cluster";

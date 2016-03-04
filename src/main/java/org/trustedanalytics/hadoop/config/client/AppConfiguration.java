@@ -16,6 +16,7 @@
 package org.trustedanalytics.hadoop.config.client;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Current use cases :
@@ -54,4 +55,11 @@ public interface AppConfiguration {
    */
   List<ServiceInstanceConfiguration> getServiceConfigList(ServiceType serviceTypeLocation);
 
+  /**
+   * Returns Cloud Foundry optional service configuration for service instance with given type.
+   *
+   * @param serviceTypeLocation config section location for service type
+   * @return optional service configuration
+   */
+  Optional<ServiceInstanceConfiguration> getServiceConfigIfExists(ServiceType serviceType);
 }

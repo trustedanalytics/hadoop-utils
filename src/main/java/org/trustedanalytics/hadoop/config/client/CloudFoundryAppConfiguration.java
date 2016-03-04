@@ -87,4 +87,13 @@ public final class CloudFoundryAppConfiguration implements AppConfiguration {
                                                                          typeSection);
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Optional<ServiceInstanceConfiguration> getServiceConfigIfExists(ServiceType serviceTypeLocation) {
+    ConfigPath configPath = ConfigPath.createPath().append(serviceTypeLocation.getConfPath())
+        .add(ConfigNode::getChildren);
+    return CloudFoundryServiceInstanceConfiguration.getConfiguration(this.rootConfigNode, configPath);
+  }
 }

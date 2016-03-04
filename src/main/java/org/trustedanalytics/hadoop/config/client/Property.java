@@ -53,6 +53,24 @@ public enum Property implements Path {
   ),
 
   /**
+   * Base64 from cacert.
+   */
+  KRB_CACERT(ConfigPath.createPath().add(configNode ->
+                                            Lists.newArrayList(
+                                                configNode
+                                                    .find(ConfigConstants.KRB_CACERT_PROP_NAME)))
+  ),
+
+  /**
+   * Detrmine is kerberos enabled.
+   */
+  KRB_MODE(ConfigPath.createPath().add(configNode ->
+                                            Lists.newArrayList(
+                                                configNode
+                                                    .find(ConfigConstants.KRB_MODE_PROP_NAME)))
+  ),
+
+  /**
    *  Zookeeper cluster address.
    */
   ZOOKEPER_URI(ConfigPath.createPath().add(configNode ->
@@ -63,7 +81,7 @@ public enum Property implements Path {
   /**
    * Zookeeper node used by broker.
    */
- ZOOKEPER_ZNODE(ConfigPath.createPath().add(configNode ->
+  ZOOKEPER_ZNODE(ConfigPath.createPath().add(configNode ->
                                             Lists.newArrayList(
                                                 configNode.find(ConfigConstants.ZOOKEEPER_ZNODE)))
   ),
@@ -71,7 +89,7 @@ public enum Property implements Path {
   /**
    * Headless account name, used for authentication in Kerberos.
    */
- USER(ConfigPath.createPath().add(configNode ->
+  USER(ConfigPath.createPath().add(configNode ->
                                             Lists.newArrayList(
                                                 configNode
                                                     .find(ConfigConstants.USER_PROP_NAME)))
