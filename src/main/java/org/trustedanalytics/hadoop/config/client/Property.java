@@ -15,11 +15,11 @@
  */
 package org.trustedanalytics.hadoop.config.client;
 
-import com.google.common.collect.Lists;
-
 import org.trustedanalytics.hadoop.config.internal.ConfigConstants;
 import org.trustedanalytics.hadoop.config.internal.ConfigPath;
 import org.trustedanalytics.hadoop.config.internal.Path;
+
+import com.google.common.collect.Lists;
 
 /**
  * Configuration properties.
@@ -111,6 +111,14 @@ public enum Property implements Path {
   HBASE_NAMESPACE(ConfigPath.createPath().add(configNode ->
                                                   Lists.newArrayList(
                                                       configNode.find(ConfigConstants.HBASE_PROP_NAME_NAMESPACE)))
+  ),
+
+  /**
+   * Yarn queue name.
+   */
+  YARN_QUEUE(ConfigPath.createPath().add(configNode ->
+                                                  Lists.newArrayList(
+                                                      configNode.find(ConfigConstants.YARN_QUEUE)))
   ),
 
   /**

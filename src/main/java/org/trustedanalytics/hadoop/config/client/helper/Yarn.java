@@ -146,7 +146,18 @@ public final class Yarn {
 
     return client;
   }
-  
+
+  /**
+   *  Get yarn queue from configuration
+   *
+   *
+   * @return queue name or %{queue} for multitenant plan
+     */
+  public String getYarnQueue()
+  {
+    return this.hadoopClient.getServiceProperty(Property.YARN_QUEUE);
+  }
+
   /**
    * Checks if authentication method type is set to "Kerberos".
    *

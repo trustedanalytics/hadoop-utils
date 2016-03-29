@@ -67,6 +67,8 @@ public final class ConfigConstants {
 
   public static final String HBASE_PROP_NAME_NAMESPACE = "hbase.namespace";
 
+  public static final String YARN_QUEUE = "queue";
+
   public static final String INSTANCE_NAME_PROP_NAME = "name";
 
   private ConfigConstants() { }
