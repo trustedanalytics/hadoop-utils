@@ -1,0 +1,23 @@
+{
+  "kerberos": [{
+      "credentials": {
+        "kcacert": "fakeCacert",
+        "enabled": true,
+        "kdc": "cdh-manager-0.node.trustedanalytics.consul",
+        "krealm": "CLOUDERA",
+        "kuser": "cf",
+        "kpassword": "cf1"
+      },
+      "name": "kerberos-instance"
+    },{
+      "credentials": {
+        "kcacert": "fakeCacert",
+        "enabled": true,
+        "kdc": "cdh-manager-0.node.trustedanalytics.consul",
+        "krealm": "CLOUDERA",
+        "kuser": "cf",
+        "kpassword": "cf1"
+      },
+      "name": "kerberos-instance2"
+    }]
+}

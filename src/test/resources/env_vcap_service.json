@@ -1,4 +1,15 @@
 {
+    "kerberos": [{
+      "credentials": {
+        "enabled": true,
+        "kcacert": "fakeCacert",
+        "kdc": "cdh-manager-0.node.trustedanalytics.consul",
+        "krealm": "CLOUDERA",
+        "kuser": "cf",
+        "kpassword": "cf1"
+      },
+      "name": "kerberos-instance"
+    }],
     "hdfs": [{
       "credentials": {
         "HADOOP_CONFIG_KEY":{

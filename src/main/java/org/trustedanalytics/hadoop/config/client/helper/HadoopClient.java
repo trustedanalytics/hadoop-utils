@@ -16,6 +16,7 @@
 package org.trustedanalytics.hadoop.config.client.helper;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.yarn.webapp.hamlet.HamletSpec;
 import org.trustedanalytics.hadoop.config.client.AppConfiguration;
 import org.trustedanalytics.hadoop.config.client.Configurations;
 import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
@@ -121,8 +122,6 @@ class HadoopClient {
    */
   static class Builder {
 
-    private final static String KRB_SERVICE_DEFAULT_NAME = "kerberos-service";
-
     private String serviceName;
 
     private String krbServiceName;
@@ -202,11 +201,15 @@ class HadoopClient {
       getServiceType().
           ifPresent(sType -> this.hadoopClient.setServiceConfiguration(conf.getServiceConfig(sType)));
       getServiceName().
-          ifPresent(serviceName ->
-                        this.hadoopClient.setServiceConfiguration(conf.getServiceConfig(serviceName)));
+          ifPresent(sName ->
+                        this.hadoopClient.setServiceConfiguration(conf.getServiceConfig(sName)));
 
-      this.hadoopClient.setKrbServiceConfiguration(
-          conf.getServiceConfig(getKrbServiceName().orElse(KRB_SERVICE_DEFAULT_NAME)));
+      if(getKrbServiceName().isPresent()) {
+        this.hadoopClient.setKrbServiceConfiguration(conf.getServiceConfig(getKrbServiceName().get()));
+      }
+      else{
+        this.hadoopClient.setKrbServiceConfiguration(conf.getServiceConfig(ServiceType.KERBEROS_TYPE));
+      }
       this.hadoopClient.setLoginManager(getLoginManager());
       return this.hadoopClient;
     }

@@ -99,4 +99,25 @@ public class HbaseTest {
     PowerMockito.verifyStatic(Mockito.times(1));
     ConnectionFactory.createConnection(hadoopConf);
   }
+
+  @Test
+  public void testCreateConfig_namedKerberosInstance_returnConfigurationForInstanceThatHasGivenName()
+      throws Exception {
+    //given
+    Hbase helper = Hbase.newInstanceForTests(HadoopClient.Builder.newInstance()
+        .withAppConfiguration(appConfiguration)
+        .withServiceName("hbase-instance1")
+        .withKrbServiceName("kerberos-instance")
+        .withLoginManager(loginManager));
+
+    //when
+    Configuration actual = helper.createConfig();
+    String hbaseNamespace = helper.getServiceProperty(Property.HBASE_NAMESPACE);
+
+    //then
+    assertEquals(
+        "cdh-master-0.node.gotapaaseu.consul,cdh-master-1.node.gotapaaseu.consul,cdh-master-2.node.gotapaaseu.consul",
+        actual.get("hbase.zookeeper.quorum"));
+    assertEquals("6f1bb0fdab0502079c4c4ca6bc770574fe546fc1", hbaseNamespace);
+  }
 }

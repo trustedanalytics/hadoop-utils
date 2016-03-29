@@ -38,12 +38,18 @@ public class CloudFoundryAppConfigurationTest {
 
   private static final String ENV_VCAP_SERVICES_FILE_PATH = "/env_vcap_service.json";
 
+  private static final String INVALID_ENV_VCAP_SERVICES_FILE_PATH = "/invalid_env_vcap_service.json";
+
   private static String vcapServices;
+
+  private static String invalidVcapServices;
 
   @Before
   public void setUp() {
-    try(InputStream hl = getClass().getResourceAsStream(ENV_VCAP_SERVICES_FILE_PATH)) {
-      vcapServices = IOUtils.toString(hl);
+    try(InputStream correctAsStream = getClass().getResourceAsStream(ENV_VCAP_SERVICES_FILE_PATH);
+        InputStream incorrectAsStream = getClass().getResourceAsStream(INVALID_ENV_VCAP_SERVICES_FILE_PATH)) {
+      vcapServices = IOUtils.toString(correctAsStream);
+      invalidVcapServices = IOUtils.toString(incorrectAsStream);
     } catch (IOException ignored) {
     }
   }
@@ -132,6 +138,15 @@ public class CloudFoundryAppConfigurationTest {
 
     //then
     //throws exception
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testGetServiceConfig_InvalidServiceInstance_throwException() throws Exception {
+    //given
+    AppConfiguration helper = Configurations.newInstanceFromJson(invalidVcapServices);
+
+    //when
+    ServiceInstanceConfiguration configuration = helper.getServiceConfig(ServiceType.KERBEROS_TYPE);
   }
 
   @Test

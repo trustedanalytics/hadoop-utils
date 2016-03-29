@@ -37,7 +37,7 @@ public final class ConfigConstants {
 
   public static final String REALM_NAME_PROP_NAME = "krealm";
 
-  public static final String KRB_CACERT_PROP_NAME = "cacert";
+  public static final String KRB_CACERT_PROP_NAME = "kcacert";
 
   public static final String KRB_MODE_PROP_NAME = "enabled";
 

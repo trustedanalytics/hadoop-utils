@@ -74,7 +74,7 @@ final class CloudFoundryServiceInstanceConfiguration implements ServiceInstanceC
       //path interpretation logic
       for (Function<ConfigNode, List<ConfigNode>> action : path.getStack()) {
         List<ConfigNode> found = action.apply(node);
-        if (found.size() != 1) {
+        if (found.size() > 1) {
           throw new IllegalStateException("Ambiguity. Impossible to determine which configuration "
                                           + "should be returned!");
         }
@@ -130,7 +130,7 @@ final class CloudFoundryServiceInstanceConfiguration implements ServiceInstanceC
       for (Function<ConfigNode, List<ConfigNode>> action : propertyLocation.getConfPath()
           .getStack()) {
         List<ConfigNode> found = action.apply(node);
-        if (found.size() != 1) {
+        if (found.size() > 1) {
           throw new IllegalStateException("Incorrect property path! Path can't fork!");
         }
         node = found.get(0);
