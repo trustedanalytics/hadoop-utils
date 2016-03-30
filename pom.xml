@@ -10,7 +10,7 @@
     </parent>
     <artifactId>hadoop-utils</artifactId>
 
-    <version>0.6.0</version>
+    <version>0.6.1</version>
     <properties>
         <hbaseVersion>1.0.0-cdh5.5.1</hbaseVersion>
         <jacoco-measurement-instructions>0.691</jacoco-measurement-instructions>
