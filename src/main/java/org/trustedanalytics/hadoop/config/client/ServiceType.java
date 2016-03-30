@@ -31,19 +31,19 @@ public enum ServiceType implements Path {
    * Location of all instances of HBASE type services.
    */
   HBASE_TYPE(ConfigPath.createPath().add(
-      configNode -> Lists.newArrayList(configNode.find(ConfigConstants.HBASE_SERVICE_TYPE_NAME)))),
+      configNode -> Lists.newArrayList(configNode.get(ConfigConstants.HBASE_SERVICE_TYPE_NAME)))),
 
   /**
    * Location of all instances of YARN type services.
    */
   YARN_TYPE(ConfigPath.createPath().add(
-      configNode -> Lists.newArrayList(configNode.find(ConfigConstants.YARN_SERVICE_TYPE_NAME)))),
+      configNode -> Lists.newArrayList(configNode.get(ConfigConstants.YARN_SERVICE_TYPE_NAME)))),
 
   /**
    * Location of all instances of HDFS type services.
    */
   HDFS_TYPE(ConfigPath.createPath().add(
-      configNode -> Lists.newArrayList(configNode.find(ConfigConstants.HDFS_SERVICE_TYPE_NAME)))),
+      configNode -> Lists.newArrayList(configNode.get(ConfigConstants.HDFS_SERVICE_TYPE_NAME)))),
 
   /**
    * Location of all instances of ZOOKEEPER type services.
@@ -51,13 +51,13 @@ public enum ServiceType implements Path {
   ZOOKEEPER_TYPE(ConfigPath.createPath()
       .add(
           configNode -> Lists.newArrayList(configNode
-              .find(ConfigConstants.ZOOKEEPER_SERVICE_TYPE_NAME)))),
+              .get(ConfigConstants.ZOOKEEPER_SERVICE_TYPE_NAME)))),
 
   /**
    * Location of all user provided services configuration.
    */
   USER_PROVIDED(ConfigPath.createPath().add(
-      configNode -> Lists.newArrayList(configNode.find(ConfigConstants.USER_PROVIDED)))),
+      configNode -> Lists.newArrayList(configNode.get(ConfigConstants.USER_PROVIDED)))),
 
   /**
    * Location of all gearpump services configuration.
@@ -65,13 +65,13 @@ public enum ServiceType implements Path {
   GEAR_PUMP_TYPE(ConfigPath.createPath()
       .add(
           configNode -> Lists.newArrayList(configNode
-              .find(ConfigConstants.GEAR_PUMP_SERVICE_TYPE_NAME)))),
+              .get(ConfigConstants.GEAR_PUMP_SERVICE_TYPE_NAME)))),
 
   /**
    * Location of all kerberos services configuration.
    */
   KERBEROS_TYPE(ConfigPath.createPath().add(
-      configNode -> Lists.newArrayList(configNode.find(ConfigConstants.KRB_CONF_NODE_NAME))));
+      configNode -> Lists.newArrayList(configNode.get(ConfigConstants.KRB_CONF_NODE_NAME))));
 
 
   private final ConfigPath configPath;
