@@ -10,12 +10,14 @@
     </parent>
     <artifactId>hadoop-utils</artifactId>
 
-    <version>0.6.3</version>
+    <version>0.6.4</version>
     <properties>
         <hbaseVersion>1.0.0-cdh5.5.1</hbaseVersion>
-        <jacoco-measurement-instructions>0.691</jacoco-measurement-instructions>
-        <jacoco-measurement-branches>0.741</jacoco-measurement-branches>
-        <jacoco-measurement-lines>0.645</jacoco-measurement-lines>
+        <brokerStoreVersion>0.5.9</brokerStoreVersion>
+        <hive.version>0.13.1</hive.version>
+        <jacoco-measurement-instructions>0.661</jacoco-measurement-instructions>
+        <jacoco-measurement-branches>0.666</jacoco-measurement-branches>
+        <jacoco-measurement-lines>0.618</jacoco-measurement-lines>
         <jacoco-measurement-classes>0.666</jacoco-measurement-classes>
     </properties>
     <profiles>
@@ -171,6 +173,56 @@
                 <exclusion>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>jetty</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-jdbc</artifactId>
+            <version>${hive.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jetty-all</artifactId>
+                    <groupId>org.eclipse.jetty.aggregate</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>hive-shims-0.20S</artifactId>
+                    <groupId>org.apache.hive.shims</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jetty</artifactId>
+                    <groupId>org.mortbay.jetty</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>hive-exec</artifactId>
+                    <groupId>org.apache.hive</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.trustedanalytics.servicebroker.repository</groupId>
+            <artifactId>hdfs-broker-store</artifactId>
+            <version>${brokerStoreVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>tomcat</groupId>
+                    <artifactId>jasper-compiler</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>tomcat</groupId>
+                    <artifactId>jasper-runtime</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

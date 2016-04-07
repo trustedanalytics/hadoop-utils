@@ -64,5 +64,25 @@ Or, if all you need is a configuration, you can get it like this :
  Configuration hbaseConf = Hbase.newInstance().createConfig();
 ```
 
+### Hive usage example
+Following example assumes that instances of hive service and kerberos service are bound to the app.
+
+More about those services can be found here :
+*  https://github.com/trustedanalytics/hive-broker,
+*  https://github.com/trustedanalytics/hive-broker#kerberos-configuration
+
+
+##### Getting hive connection
+
+```java
+ Connection hiveConn = Hive.newInstance().createConnection();
+```
+
+Or, if all you need is a configuration, you can get it like this :
+
+```java
+ Configuration hiveConf = Hive.newInstance().createConfig();
+```
+
 ## More advanced examples
 There is a lot more. Check out the javadocs. For more advanced examples, see [advanced](docs/advanced.md).  

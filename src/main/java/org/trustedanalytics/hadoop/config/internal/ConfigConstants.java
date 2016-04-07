@@ -43,6 +43,8 @@ public final class ConfigConstants {
 
   public static final String HDFS_URI = "uri";
 
+  public static final String HIVE_URL = "connectionUrl";
+
   public static final String ZOOKEEPER_CLUSTER = "zk.cluster";
 
   public static final String ZOOKEEPER_ZNODE = "zk.node";
@@ -50,6 +52,8 @@ public final class ConfigConstants {
   public static final String HDFS_SERVICE_TYPE_NAME = "hdfs";
 
   public static final String YARN_SERVICE_TYPE_NAME = "yarn";
+
+  public static final String HIVE_SERVICE_TYPE_NAME = "hive";
 
   public static final String HBASE_SERVICE_TYPE_NAME = "hbase";
 

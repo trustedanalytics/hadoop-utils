@@ -34,6 +34,25 @@
         "zk.node": "/platform/e59a67b8-bcad-403e-a2a9-6bde5285f05e"
       }
     }],
+  "hive": [
+    {
+      "credentials": {
+        "HADOOP_CONFIG_KEY":{
+        },
+        "connectionUrl": "jdbc:hive2://cdh-master-0.node.gotapaaseu.consul:10000/%{organization};kerberosAuthType=fromSubject"
+      },
+      "name": "hive-instance1"
+    },
+    {
+      "credentials": {
+        "HADOOP_CONFIG_KEY":{
+          "hadoop.security.authentication":"kerberos"
+        },
+        "connectionUrl": "jdbc:hive2://cdh-master-0.node.gotapaaseu.consul:10000/weareop;kerberosAuthType=fromSubject"
+      },
+      "name": "hive-instance2"
+    }
+  ],
     "hbase": [{
       "credentials": {
         "HADOOP_CONFIG_KEY":{

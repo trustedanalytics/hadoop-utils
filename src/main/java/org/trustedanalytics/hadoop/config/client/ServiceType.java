@@ -46,6 +46,12 @@ public enum ServiceType implements Path {
       configNode -> Lists.newArrayList(configNode.get(ConfigConstants.HDFS_SERVICE_TYPE_NAME)))),
 
   /**
+   * Location of all instances of HDFS type services.
+   */
+  HIVE_TYPE(ConfigPath.createPath().add(
+      configNode -> Lists.newArrayList(configNode.get(ConfigConstants.HIVE_SERVICE_TYPE_NAME)))),
+
+  /**
    * Location of all instances of ZOOKEEPER type services.
    */
   ZOOKEEPER_TYPE(ConfigPath.createPath()

@@ -35,6 +35,15 @@ public enum Property implements Path {
   ),
 
   /**
+   * Hive directory URI used by broker.
+   */
+  HIVE_URL(ConfigPath.createPath().add(configNode ->
+      Lists.newArrayList(configNode.find(
+          ConfigConstants.HIVE_URL)))
+  ),
+
+
+  /**
    * Kerberos KDC address.
    */
   KRB_KDC(ConfigPath.createPath().add(configNode ->
