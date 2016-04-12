@@ -275,16 +275,16 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
       try {
         Process pr = run.exec(kinit);
         pr.waitFor();
-        BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-        buf.lines().forEach(LOGGER::info);
-        if (pr.exitValue() != 0) {
-          StringBuilder toLog = new StringBuilder("ktinit execution failed: \n");
-          BufferedReader err = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
-          err.lines().forEach(line -> toLog.append(line).append("\n"));
-          err.close();
-          throw new LoginException(toLog.toString());
+        try(BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
+          buf.lines().forEach(LOGGER::info);
+          if (pr.exitValue() != 0) {
+            StringBuilder toLog = new StringBuilder("ktinit execution failed: \n");
+            try (BufferedReader err = new BufferedReader(new InputStreamReader(pr.getErrorStream()))) {
+              err.lines().forEach(line -> toLog.append(line).append("\n"));
+            }
+            throw new LoginException(toLog.toString());
+          }
         }
-        buf.close();
       } catch (IOException | InterruptedException e) {
         LoginException propagate = new LoginException(e.getMessage());
         propagate.initCause(e);
