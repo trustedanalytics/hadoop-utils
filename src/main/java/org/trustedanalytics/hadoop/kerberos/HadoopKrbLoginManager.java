@@ -275,16 +275,7 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
       try {
         Process pr = run.exec(kinit);
         pr.waitFor();
-        try(BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
-          buf.lines().forEach(LOGGER::info);
-          if (pr.exitValue() != 0) {
-            StringBuilder toLog = new StringBuilder("ktinit execution failed: \n");
-            try (BufferedReader err = new BufferedReader(new InputStreamReader(pr.getErrorStream()))) {
-              err.lines().forEach(line -> toLog.append(line).append("\n"));
-            }
-            throw new LoginException(toLog.toString());
-          }
-        }
+        kinitOutput(pr);
       } catch (IOException | InterruptedException e) {
         LoginException propagate = new LoginException(e.getMessage());
         propagate.initCause(e);
@@ -300,6 +291,19 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
         throws KrbException {
       KeyTab secret = KeyTab.getInstance(new File(keyTabLocation));
       return new KrbAsReqBuilder(pName, secret);
+    }
+
+    private void kinitOutput(Process pr) throws LoginException, IOException {
+      try(BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
+        buf.lines().forEach(LOGGER::info);
+        if (pr.exitValue() != 0) {
+          StringBuilder toLog = new StringBuilder("ktinit execution failed: \n");
+          try (BufferedReader err = new BufferedReader(new InputStreamReader(pr.getErrorStream()))) {
+            err.lines().forEach(line -> toLog.append(line).append("\n"));
+          }
+          throw new LoginException(toLog.toString());
+        }
+      }
     }
 
     private void getTgt(PrincipalName pName, KrbAsReqBuilder builder) throws KrbException,

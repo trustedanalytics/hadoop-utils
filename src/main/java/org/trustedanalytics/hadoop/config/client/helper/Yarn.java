@@ -36,6 +36,10 @@ public final class Yarn {
 
   private final HadoopClient hadoopClient;
 
+  private Yarn(HadoopClient defaultClient) throws IOException {
+    this.hadoopClient = defaultClient;
+  }
+
   /**
    * Creates new instance of Yarn client helper. Assume that the only one instance of
    * {@link org.trustedanalytics.hadoop.config.client.ServiceType#YARN_TYPE} is bound.
@@ -62,11 +66,6 @@ public final class Yarn {
   @VisibleForTesting
   static Yarn newInstanceForTests(HadoopClient.Builder builder) throws IOException {
     return new Yarn(builder.build());
-  }
-
-
-  private Yarn(HadoopClient defaultClient) throws IOException {
-    this.hadoopClient = defaultClient;
   }
 
   /**

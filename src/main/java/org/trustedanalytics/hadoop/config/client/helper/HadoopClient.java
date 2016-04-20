@@ -16,7 +16,6 @@
 package org.trustedanalytics.hadoop.config.client.helper;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.yarn.webapp.hamlet.HamletSpec;
 import org.trustedanalytics.hadoop.config.client.AppConfiguration;
 import org.trustedanalytics.hadoop.config.client.Configurations;
 import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;

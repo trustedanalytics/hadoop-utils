@@ -41,6 +41,7 @@ public class UgiWrapper {
   }
 
   public interface YarnPrivilegedAction<T> extends PrivilegedExceptionAction<T> {
+    @Override
     T run() throws YarnException, IOException;
   }
 }

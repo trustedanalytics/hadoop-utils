@@ -78,6 +78,10 @@ public final class Hbase {
 
   private final HadoopClient hadoopClient;
 
+  private Hbase(HadoopClient hadoopClient) throws IOException {
+    this.hadoopClient = hadoopClient;
+  }
+
   /**
    * Creates new instance of Hbase client helper, assuming that the only one instance of
    * {@link org.trustedanalytics.hadoop.config.client.ServiceType#HBASE_TYPE} is bound.
@@ -103,10 +107,6 @@ public final class Hbase {
   @VisibleForTesting
   static Hbase newInstanceForTests(HadoopClient.Builder builder) throws IOException {
     return new Hbase(builder.build());
-  }
-
-  private Hbase(HadoopClient hadoopClient) throws IOException {
-    this.hadoopClient = hadoopClient;
   }
 
   /**

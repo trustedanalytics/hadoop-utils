@@ -25,6 +25,14 @@ public final class JsonConfigurationReader
 
   private ConfigNode rootNode;
 
+  private JsonConfigurationReader(String json) throws IOException {
+    this(new FactoryHelper(), json);
+  }
+
+  JsonConfigurationReader(FactoryHelper helperFactory, String json) throws IOException {
+    rootNode = JsonConfigNode.createInstance(helperFactory.getJsonMapper().readTree(json));
+  }
+
   public static JsonConfigurationReader getReader(String json) throws IOException {
     Preconditions.checkNotNull(json);
     return new JsonConfigurationReader(json);
@@ -34,14 +42,6 @@ public final class JsonConfigurationReader
     ObjectMapper getJsonMapper() {
       return new ObjectMapper();
     }
-  }
-
-  JsonConfigurationReader(FactoryHelper helperFactory, String json) throws IOException {
-    rootNode = JsonConfigNode.createInstance(helperFactory.getJsonMapper().readTree(json));
-  }
-
-  private JsonConfigurationReader(String json) throws IOException {
-    this(new FactoryHelper(), json);
   }
 
   @Override

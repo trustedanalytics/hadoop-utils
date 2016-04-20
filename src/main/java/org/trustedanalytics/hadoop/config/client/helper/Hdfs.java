@@ -75,6 +75,10 @@ public final class Hdfs {
 
   private final HadoopClient hadoopClient;
 
+  private Hdfs(HadoopClient hadoopClient) throws IOException {
+    this.hadoopClient = hadoopClient;
+  }
+
   /**
    * Creates new instance of Hdfs client helper. Assume that the only one instance of
    * {@link org.trustedanalytics.hadoop.config.client.ServiceType#HDFS_TYPE} is bound.
@@ -100,10 +104,6 @@ public final class Hdfs {
   @VisibleForTesting
   static Hdfs newInstanceForTests(HadoopClient.Builder builder) throws IOException {
     return new Hdfs(builder.build());
-  }
-
-  private Hdfs(HadoopClient hadoopClient) throws IOException {
-    this.hadoopClient = hadoopClient;
   }
 
   /**

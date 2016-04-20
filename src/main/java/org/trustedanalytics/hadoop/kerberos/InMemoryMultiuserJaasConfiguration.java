@@ -24,18 +24,17 @@ import javax.security.auth.login.Configuration;
 class InMemoryMultiuserJaasConfiguration extends Configuration {
 
   private final Map<String, AppConfigurationEntry[]> mappedConfigurations;
-
   private static InMemoryMultiuserJaasConfiguration instance;
+
+  private InMemoryMultiuserJaasConfiguration(Map<String, AppConfigurationEntry[]> mappedConfigurations) {
+    this.mappedConfigurations = mappedConfigurations;
+  }
 
   public static InMemoryMultiuserJaasConfiguration getInstance() {
     if (null == instance) {
       instance = new InMemoryMultiuserJaasConfiguration(Maps.newConcurrentMap());
     }
     return instance;
-  }
-
-  private InMemoryMultiuserJaasConfiguration(Map<String, AppConfigurationEntry[]> mappedConfigurations) {
-    this.mappedConfigurations = mappedConfigurations;
   }
 
   @Override
