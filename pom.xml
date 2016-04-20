@@ -10,7 +10,7 @@
     </parent>
     <artifactId>hadoop-utils</artifactId>
 
-    <version>0.6.4</version>
+    <version>0.6.5</version>
     <properties>
         <hbaseVersion>1.0.0-cdh5.5.1</hbaseVersion>
         <brokerStoreVersion>0.5.9</brokerStoreVersion>
@@ -223,6 +223,10 @@
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.cloudfoundry</groupId>
+                    <artifactId>spring-boot-cf-service-broker</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
