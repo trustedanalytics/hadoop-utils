@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class ConfigPath implements Serializable {
+public class ConfigPath {
 
   private final List<Function<ConfigNode, List<ConfigNode>>> stack = new ArrayList<>();
 

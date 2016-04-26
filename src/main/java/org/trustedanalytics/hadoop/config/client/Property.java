@@ -139,7 +139,7 @@ public enum Property implements Path {
   );
 
 
-  private final ConfigPath configPath;
+  private transient final ConfigPath configPath;
 
   Property(ConfigPath path) {
     this.configPath = path;

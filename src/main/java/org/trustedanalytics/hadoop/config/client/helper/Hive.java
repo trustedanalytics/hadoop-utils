@@ -97,6 +97,10 @@ public class Hive {
 
   private final HadoopClient hadoopClient;
 
+  private Hive(HadoopClient hadoopClient) throws IOException {
+    this.hadoopClient = hadoopClient;
+  }
+
   /**
    * Creates new instance of Hive client helper, assuming that the only one instance of
    * {@link org.trustedanalytics.hadoop.config.client.ServiceType#HIVE_TYPE} is bound.
@@ -123,10 +127,6 @@ public class Hive {
   @VisibleForTesting
   static Hive newInstanceForTests(HadoopClient.Builder builder) throws IOException {
     return new Hive(builder.build());
-  }
-
-  private Hive(HadoopClient hadoopClient) throws IOException {
-    this.hadoopClient = hadoopClient;
   }
 
   private String getRawConnectionString() {
