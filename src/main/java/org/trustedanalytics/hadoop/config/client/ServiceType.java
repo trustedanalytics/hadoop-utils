@@ -79,7 +79,7 @@ public enum ServiceType implements Path {
   KERBEROS_TYPE(ConfigPath.createPath().add(
       configNode -> Lists.newArrayList(configNode.get(ConfigConstants.KRB_CONF_NODE_NAME))));
 
-  private final ConfigPath configPath;
+  private final transient ConfigPath configPath;
 
   ServiceType(ConfigPath path) {
     this.configPath = path;
