@@ -10,7 +10,7 @@
     </parent>
     <artifactId>hadoop-utils</artifactId>
 
-    <version>0.6.7</version>
+    <version>0.6.8</version>
     <properties>
         <hbaseVersion>1.0.0-cdh5.5.1</hbaseVersion>
         <brokerStoreVersion>0.5.9</brokerStoreVersion>

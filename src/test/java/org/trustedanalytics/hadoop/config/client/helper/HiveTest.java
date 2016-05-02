@@ -165,7 +165,7 @@ public class HiveTest {
     Configuration config = helper.createConfig();
 
     PowerMockito.mockStatic(DriverManager.class);
-    PowerMockito.when(DriverManager.getConnection(connectionUrl, null, null)).thenReturn(connection);
+    PowerMockito.when(DriverManager.getConnection(connectionUrl, "Hive", null)).thenReturn(connection);
 
     assertEquals(Hive.getConnection("Hive", config, connectionUrl), connection);
   }

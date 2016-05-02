@@ -215,7 +215,7 @@ public class Hive {
         UserGroupInformation.getBestUGI(ticketCachePath, user);
     return (Connection) signedOnUserSubject.doAs((PrivilegedExceptionAction<Object>) () -> {
       Class.forName(JDBC_DRIVER);
-      return DriverManager.getConnection(jdbcUrl, null, null);
+      return DriverManager.getConnection(jdbcUrl, user, null);
     });
   }
 
