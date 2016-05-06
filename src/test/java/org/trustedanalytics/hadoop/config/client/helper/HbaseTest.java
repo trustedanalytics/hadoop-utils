@@ -15,16 +15,25 @@
  */
 package org.trustedanalytics.hadoop.config.client.helper;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
+import org.apache.hadoop.hbase.security.User;
+import org.apache.hadoop.hbase.security.UserProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.trustedanalytics.hadoop.config.client.AppConfiguration;
@@ -32,15 +41,11 @@ import org.trustedanalytics.hadoop.config.client.Configurations;
 import org.trustedanalytics.hadoop.config.client.Property;
 import org.trustedanalytics.hadoop.kerberos.KrbLoginManager;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ConnectionFactory.class,
-                 HBaseConfiguration.class})
+                 HBaseConfiguration.class,
+                 UserProvider.class})
+@PowerMockIgnore("javax.security.auth.*")
 public class HbaseTest {
 
   private static final String ENV_VCAP_SERVICES_FILE_PATH = "/env_vcap_service.json";
@@ -49,6 +54,12 @@ public class HbaseTest {
 
   @Mock
   private KrbLoginManager loginManager;
+
+  @Mock
+  private UserProvider userProvided;
+
+  @Mock
+  private User user;
 
   @Before
   public void setUp() {
@@ -90,14 +101,17 @@ public class HbaseTest {
 
     PowerMockito.mockStatic(ConnectionFactory.class);
     PowerMockito.mockStatic(HBaseConfiguration.class);
+    PowerMockito.mockStatic(UserProvider.class);
     Mockito.when(HBaseConfiguration.create(any())).thenReturn(hadoopConf);
+    Mockito.when(UserProvider.instantiate(hadoopConf)).thenReturn(userProvided);
+    Mockito.when(userProvided.create(any())).thenReturn(user);
 
     //when
     helper.createConnection();
 
     //then
     PowerMockito.verifyStatic(Mockito.times(1));
-    ConnectionFactory.createConnection(hadoopConf);
+    ConnectionFactory.createConnection(hadoopConf, user);
   }
 
   @Test

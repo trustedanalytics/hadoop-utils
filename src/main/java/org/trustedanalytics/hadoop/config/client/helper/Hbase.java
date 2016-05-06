@@ -117,11 +117,10 @@ public final class Hbase {
    */
   public Connection createConnection() throws LoginException, IOException {
     Configuration hbaseConf = HBaseConfiguration.create(hadoopClient.createConfig());
-    if (!hadoopClient.isKerberosEnabled(hbaseConf)) {
-      return ConnectionFactory.createConnection(hbaseConf);
-    }
+    String ticketCachePath = hbaseConf.get("hadoop.security.kerberos.ticket.cache.path");
+    String userName = hadoopClient.getKrbServiceProperty(Property.USER);
     User user = UserProvider.instantiate(hbaseConf)
-        .create(UserGroupInformation.getUGIFromSubject(hadoopClient.getLoggedUserIdentity()));
+        .create(UserGroupInformation.getBestUGI(ticketCachePath, userName));
     return ConnectionFactory.createConnection(hbaseConf, user);
   }
 
@@ -132,10 +131,11 @@ public final class Hbase {
    * @return hbase file system for user that is identified by jwt token
    */
   public Connection  createConnection(JwtToken jwtToken) throws LoginException, IOException {
-    Configuration hbaseConf = HBaseConfiguration.create(hadoopClient.createConfig());
+    Configuration hbaseConf = HBaseConfiguration.create(hadoopClient.createConfig(jwtToken));
+    String ticketCachePath = hbaseConf.get("hadoop.security.kerberos.ticket.cache.path");
+    String userName = jwtToken.getUserId();
     User user = UserProvider.instantiate(hbaseConf)
-        .create(UserGroupInformation.getUGIFromSubject(hadoopClient
-                                                           .getLoggedUserIdentity(jwtToken)));
+        .create(UserGroupInformation.getBestUGI(ticketCachePath, userName));
     return ConnectionFactory.createConnection(hbaseConf, user);
   }
 
