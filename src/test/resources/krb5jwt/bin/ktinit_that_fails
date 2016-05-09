@@ -36,6 +36,4 @@ while [[ $# > 0 ]]; do
     esac
 done
 
-echo ${@}
-touch $result_cc
-exit 0
+exit 1

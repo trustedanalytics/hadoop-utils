@@ -17,6 +17,7 @@ package org.trustedanalytics.hadoop.kerberos;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -31,10 +32,8 @@ import sun.security.krb5.internal.KDCOptions;
 import sun.security.krb5.internal.ccache.Credentials;
 import sun.security.krb5.internal.ccache.CredentialsCache;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,7 +69,8 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
 
   static final String KRB5_TGT_PRINCIPAL_NAME = "krbtgt";
 
-  private static final String KERB_MODULE = "com.sun.security.auth.module.Krb5LoginModule";
+  private static final String KERB_MODULE =
+      "org.trustedanalytics.hadoop.kerberos.Oauth2KrbLoginModule";
 
   private static final String KRB5_CREDENTIALS_CACHE_DIR = "/tmp/";
 
@@ -96,10 +96,11 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
   @Override
   public Subject loginWithJWTtoken(JwtToken jwtToken) throws LoginException {
     String userId = jwtToken.getUserId();
-    setKerbConfigFromOpts(userId, getDefaultOptionsForPrincipal(userId));
-    LoginContext lc = helper.getLoginContext(userId,
-                                             new FixedPasswordHandler("some".toCharArray()));
-    helper.cacheKrbCredentials(jwtToken);
+    Map<String, String> opts = Maps.newHashMap();
+    opts.put(Oauth2KrbLoginModule.ConfigOptions.USE_TOKEN.getName(), "true");
+    setKerbConfigFromOpts(userId, opts);
+    LoginContext lc =
+        helper.getLoginContext(userId, new Oauth2KrbCallbackHandler(jwtToken::getRawToken));
     return login(lc);
   }
 
@@ -155,7 +156,7 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
     return token.getUserId();
   }
 
-  String ticketCacheLocation(Subject subject) {
+  static String ticketCacheLocation(Subject subject) {
     return ticketCacheLocation(getPrincipalName(subject));
   }
 
@@ -263,26 +264,6 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
       }
     }
 
-    synchronized void cacheKrbCredentials(JwtToken jwtToken) throws LoginException {
-      String princName = jwtToken.getUserId() +
-                         PrincipalName.NAME_REALM_SEPARATOR_STR +
-                         System.getProperty(KRB5_REALM);
-      String path = System.getProperty("user.dir");
-      String kinit = path + "/krb5jwt/bin/ktinit -t " + jwtToken.getRawToken()
-                     + " -c " + HadoopKrbLoginManager.ticketCacheLocation(princName)
-                     + " -P " + princName;
-      Runtime run = Runtime.getRuntime();
-      try {
-        Process pr = run.exec(kinit);
-        pr.waitFor();
-        kinitOutput(pr);
-      } catch (IOException | InterruptedException e) {
-        LoginException propagate = new LoginException(e.getMessage());
-        propagate.initCause(e);
-        throw propagate;
-      }
-    }
-
     private KrbAsReqBuilder prepareTgtReq(PrincipalName pName, char[] secret) throws KrbException {
       return new KrbAsReqBuilder(pName, secret);
     }
@@ -291,19 +272,6 @@ final class HadoopKrbLoginManager implements KrbLoginManager {
         throws KrbException {
       KeyTab secret = KeyTab.getInstance(new File(keyTabLocation));
       return new KrbAsReqBuilder(pName, secret);
-    }
-
-    private void kinitOutput(Process pr) throws LoginException, IOException {
-      try(BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
-        buf.lines().forEach(LOGGER::info);
-        if (pr.exitValue() != 0) {
-          StringBuilder toLog = new StringBuilder("ktinit execution failed: \n");
-          try (BufferedReader err = new BufferedReader(new InputStreamReader(pr.getErrorStream()))) {
-            err.lines().forEach(line -> toLog.append(line).append("\n"));
-          }
-          throw new LoginException(toLog.toString());
-        }
-      }
     }
 
     private void getTgt(PrincipalName pName, KrbAsReqBuilder builder) throws KrbException,
