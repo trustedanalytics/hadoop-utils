@@ -15,10 +15,10 @@
         <hbaseVersion>1.0.0-cdh5.5.1</hbaseVersion>
         <brokerStoreVersion>0.5.9</brokerStoreVersion>
         <hive.version>0.13.1</hive.version>
-        <jacoco-measurement-instructions>0.660</jacoco-measurement-instructions>
-        <jacoco-measurement-branches>0.666</jacoco-measurement-branches>
-        <jacoco-measurement-lines>0.618</jacoco-measurement-lines>
-        <jacoco-measurement-classes>0.666</jacoco-measurement-classes>
+        <jacoco-measurement-instructions>0.690</jacoco-measurement-instructions>
+        <jacoco-measurement-branches>0.790</jacoco-measurement-branches>
+        <jacoco-measurement-lines>0.650</jacoco-measurement-lines>
+        <jacoco-measurement-classes>0.710</jacoco-measurement-classes>
     </properties>
     <profiles>
         <profile>
