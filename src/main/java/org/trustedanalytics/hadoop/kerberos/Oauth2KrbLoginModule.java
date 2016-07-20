@@ -120,13 +120,15 @@ public final class Oauth2KrbLoginModule implements LoginModule {
     try {
       Process pr = run.exec(kinitCmd);
       pr.waitFor();
-      BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-      buf.lines().forEach(LOGGER::info);
+      try (BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
+        buf.lines().forEach(LOGGER::info);
+      }
       if (pr.exitValue() != 0) {
-        StringBuilder toLog = new StringBuilder("ktinit execution failed: \n");
-        BufferedReader err = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
-        err.lines().forEach(line -> toLog.append(line).append("\n"));
-        throw new LoginException(toLog.toString());
+        try(BufferedReader err = new BufferedReader(new InputStreamReader(pr.getErrorStream()))) {
+          StringBuilder toLog = new StringBuilder("ktinit execution failed: \n");
+          err.lines().forEach(line -> toLog.append(line).append("\n"));
+          throw new LoginException(toLog.toString());
+        }
       }
       if(!Files.exists(Paths.get(ticketCache))) {
         throw new LoginException("Failed to create krb credential cache in location: "
@@ -140,7 +142,7 @@ public final class Oauth2KrbLoginModule implements LoginModule {
   }
 
   @SuppressWarnings("unchecked")
-  Map<String, ?> prepareOptionsForDelegation(JwtToken token, Map optionsFromConfig) {
+  Map<String, String> prepareOptionsForDelegation(JwtToken token, Map optionsFromConfig) {
     Map<String, String> options = Maps.newHashMap(optionsFromConfig);
     options.put("principal", token.getUserId());
     options.putIfAbsent("storeKey", "false");
