@@ -16,7 +16,6 @@
 package org.trustedanalytics.hadoop.kerberos;
 
 import com.google.common.collect.Maps;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,6 +39,8 @@ public class Oauth2KrbLoginModuleTest {
   private String anotherExpectedKrbCacheLocation;
 
   private static final String DEAFULT_REALM  = "CLOUDERA";
+
+
 
   @Before
   public void setUp() {
@@ -178,7 +179,7 @@ public class Oauth2KrbLoginModuleTest {
     Oauth2KrbLoginModule toTest = new Oauth2KrbLoginModule();
     Map<String, String> options = Maps.newHashMap();
     options.put(Oauth2KrbLoginModule.ConfigOptions.TOKEN_CACHE.getName(),
-                Oauth2KrbLoginModuleTest.class.getClassLoader().getResource("oauth.token").getPath());
+            Oauth2KrbLoginModuleTest.class.getClassLoader().getResource("oauth.token").getPath());
     //when
     JwtToken actual = toTest.retrieveToken(new Oauth2KrbCallbackHandler(), options);
 

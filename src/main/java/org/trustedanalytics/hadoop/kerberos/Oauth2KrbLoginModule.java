@@ -17,16 +17,19 @@ package org.trustedanalytics.hadoop.kerberos;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-
 import com.sun.security.auth.module.Krb5LoginModule;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
 import org.trustedanalytics.hadoop.config.client.oauth.TapOauthToken;
-
 import sun.security.krb5.PrincipalName;
 
+import javax.security.auth.Subject;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.security.auth.login.LoginException;
+import javax.security.auth.spi.LoginModule;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,12 +39,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.security.auth.Subject;
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.security.auth.login.LoginException;
-import javax.security.auth.spi.LoginModule;
+import static java.nio.file.Files.exists;
 
 public final class Oauth2KrbLoginModule implements LoginModule {
 
@@ -68,8 +66,11 @@ public final class Oauth2KrbLoginModule implements LoginModule {
             .map(cache ->this.ticketCache = cache)
             .orElseGet(() -> this.ticketCache =
                 HadoopKrbLoginManager.ticketCacheLocation(getPrincipalName(tapToken)));
+
         this.ktinit  = ConfigOptions.KTINIT_COMMAND.asString(options)
-            .orElse(System.getProperty("user.dir") + "/krb5jwt/bin/ktinit");
+            .orElse(getKtinit());
+
+
         prepareKrbCCache(tapToken);
         optionsToDelegee = prepareOptionsForDelegation(tapToken, options);
       } catch (IOException | UnsupportedCallbackException | LoginException e) {
@@ -81,6 +82,14 @@ public final class Oauth2KrbLoginModule implements LoginModule {
                         callbackHandler,
                         sharedState,
                         optionsToDelegee);
+  }
+
+  private static String getKtinit() {
+    String ktinit = System.getProperty("user.dir") + "/krb5jwt/bin/ktinit";
+    if(Files.notExists(Paths.get(ktinit))) {
+      ktinit = "ktinit"; // run ktinit from path
+    }
+    return ktinit;
   }
 
   @Override
@@ -130,7 +139,7 @@ public final class Oauth2KrbLoginModule implements LoginModule {
           throw new LoginException(toLog.toString());
         }
       }
-      if(!Files.exists(Paths.get(ticketCache))) {
+      if(!exists(Paths.get(ticketCache))) {
         throw new LoginException("Failed to create krb credential cache in location: "
                                  + ticketCache);
       }
