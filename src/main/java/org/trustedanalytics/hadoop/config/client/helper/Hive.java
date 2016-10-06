@@ -26,6 +26,7 @@ import javax.security.auth.login.LoginException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.trustedanalytics.cfbroker.store.hdfs.helper.HdfsPathTemplateUtils;
+import org.trustedanalytics.hadoop.config.client.AppConfiguration;
 import org.trustedanalytics.hadoop.config.client.Property;
 import org.trustedanalytics.hadoop.config.client.ServiceType;
 import org.trustedanalytics.hadoop.config.client.oauth.JwtToken;
@@ -122,6 +123,13 @@ public class Hive {
    */
   public static Hive newInstance(String instanceName) throws IOException {
     return new Hive(HadoopClient.Builder.newInstance().withServiceName(instanceName).build());
+  }
+
+  public static Hive newInstance(AppConfiguration appConfig) throws IOException {
+    return new Hive(
+        HadoopClient.Builder.newInstance()
+        .withAppConfiguration(appConfig)
+        .withServiceType(ServiceType.HIVE_TYPE).build());
   }
 
   @VisibleForTesting
