@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.trustedanalytics.hadoop.config.client.Property;
 import org.trustedanalytics.hadoop.config.client.ServiceInstanceConfiguration;
+import org.trustedanalytics.hadoop.config.client.SimpleInstanceConfiguration;
 
 public class SimpleIstanceConfigurationTest
 {

@@ -25,6 +25,8 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.trustedanalytics.hadoop.config.client.SimpleAppConfiguration;
+import org.trustedanalytics.hadoop.config.client.SimpleInstanceConfiguration;
 
 public class SimpleAppConfigurationTest {
 

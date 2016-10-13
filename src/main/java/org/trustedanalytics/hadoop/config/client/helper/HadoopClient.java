@@ -72,7 +72,7 @@ class HadoopClient {
   /**
    * {@inheritDoc}
    */
-  public boolean isKerberosEnabled(Configuration hadoopConf) {
+  public static boolean isKerberosEnabled(Configuration hadoopConf) {
     return AUTHENTICATION_METHOD.equals(hadoopConf.get(AUTHENTICATION_METHOD_PROPERTY));
   }
 
@@ -209,7 +209,11 @@ class HadoopClient {
       else{
         this.hadoopClient.setKrbServiceConfiguration(conf.getServiceConfig(ServiceType.KERBEROS_TYPE));
       }
-      this.hadoopClient.setLoginManager(getLoginManager());
+
+      Configuration hadoopConf = this.hadoopClient.serviceConfiguration.asHadoopConfiguration();
+      if (HadoopClient.isKerberosEnabled(hadoopConf)) {
+        this.hadoopClient.setLoginManager(getLoginManager());
+      }
       return this.hadoopClient;
     }
   }

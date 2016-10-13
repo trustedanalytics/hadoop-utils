@@ -9,14 +9,14 @@
         <version>0.5.0</version>
     </parent>
     <artifactId>hadoop-utils</artifactId>
-    <version>0.6.15</version>
+    <version>0.6.16</version>
 
     <properties>
         <hbaseVersion>1.0.0-cdh5.5.1</hbaseVersion>
         <brokerStoreVersion>0.5.9</brokerStoreVersion>
         <hive.version>0.13.1</hive.version>
         <jacoco-measurement-instructions>0.680</jacoco-measurement-instructions>
-        <jacoco-measurement-branches>0.719</jacoco-measurement-branches>
+        <jacoco-measurement-branches>0.702</jacoco-measurement-branches>
         <jacoco-measurement-lines>0.650</jacoco-measurement-lines>
         <jacoco-measurement-classes>0.710</jacoco-measurement-classes>
     </properties>
