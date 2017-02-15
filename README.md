@@ -1,6 +1,3 @@
-[![Build Status](https://travis-ci.org/trustedanalytics/hadoop-utils.svg?branch=master)](https://travis-ci.org/trustedanalytics/hadoop-utils)
-[![Dependency Status](https://www.versioneye.com/user/projects/57236849ba37ce004309f323/badge.svg?style=flat)](https://www.versioneye.com/user/projects/57236849ba37ce004309f323)
-
 # hadoop-utils
 Library of utilities, related to Hadoop and Cloud Foundry. This library is intended for 
 TAP (link) applications developers. It supports Cloud Foundry brokers and facilitates 
