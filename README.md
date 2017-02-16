@@ -28,8 +28,8 @@ mvn clean install
 Following example assumes that instances of hdfs service and kerberos service are bound to the app.
 
 More about those services can be found here : 
-*  https://github.com/trustedanalytics/hdfs-broker,
-*  https://github.com/trustedanalytics/hdfs-broker#kerberos-configuration
+*  https://github.com/trustedanalytics-ng/hdfs-broker,
+*  https://github.com/trustedanalytics-ng/hdfs-broker#kerberos-configuration
 
 #### 1) Use case with one configured service account (headless account).
 
@@ -48,8 +48,8 @@ Or, if all you need is a configuration, you can get it like this :
 Following example assumes that instances of hbase service and kerberos service are bound to the app.
 
 More about those services can be found here : 
-*  https://github.com/trustedanalytics/hbase-broker,
-*  https://github.com/trustedanalytics/hbase-broker#kerberos-configuration
+*  https://github.com/trustedanalytics-ng/hbase-broker,
+*  https://github.com/trustedanalytics-ng/hbase-broker#kerberos-configuration
 
 
 ##### Getting hbase connection
@@ -68,8 +68,8 @@ Or, if all you need is a configuration, you can get it like this :
 Following example assumes that instances of hive service and kerberos service are bound to the app.
 
 More about those services can be found here :
-*  https://github.com/trustedanalytics/hive-broker,
-*  https://github.com/trustedanalytics/hive-broker#kerberos-configuration
+*  https://github.com/trustedanalytics-ng/hive-broker,
+*  https://github.com/trustedanalytics-ng/hive-broker#kerberos-configuration
 
 
 ##### Getting hive connection

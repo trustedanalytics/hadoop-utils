@@ -76,4 +76,4 @@ User user = UserProvider.instantiate(conf)
             
 Connection connection = ConnectionFactory.createConnection(conf, user);
 ```
-For spring application you can use https://github.com/trustedanalytics/hadoop-spring-utils.
+For spring application you can use https://github.com/trustedanalytics-ng/hadoop-spring-utils.
